@@ -1,0 +1,632 @@
+[
+  {
+    "block_key": "image_dataset.Block2",
+    "scope": "image_dataset",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py",
+    "line_start": 2,
+    "line_end": 42,
+    "torch_calls": [
+      "torch.randn"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "image_dataset.ImageDataset._make_example.Block9",
+    "scope": "image_dataset.ImageDataset._make_example",
+    "block_id": 9,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py",
+    "line_start": 31,
+    "line_end": 36,
+    "torch_calls": [
+      "torch.randn.float",
+      "torch.randn"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "model.Block1",
+    "scope": "model",
+    "block_id": 1,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/model.py",
+    "line_start": 1,
+    "line_end": 42,
+    "torch_calls": [
+      "torch.nn.Embedding",
+      "torch.nn.Parameter",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.Linear",
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "model.ToyTransformerClassifier.__init__.Block5",
+    "scope": "model.ToyTransformerClassifier.__init__",
+    "block_id": 5,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/model.py",
+    "line_start": 16,
+    "line_end": 30,
+    "torch_calls": [
+      "torch.nn.Embedding",
+      "torch.nn.Parameter",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.Linear",
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.Block2",
+    "scope": "stable_diffusion",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 5,
+    "line_end": 121,
+    "torch_calls": [
+      "torch.nn.Conv2d",
+      "torch.nn.GroupNorm",
+      "torch.nn.SiLU",
+      "torch.nn.ModuleList",
+      "torch.nn.Sequential",
+      "torch.nn.ConvTranspose2d",
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block32",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 32,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 75,
+    "line_end": 78,
+    "torch_calls": [
+      "torch.nn.Conv2d",
+      "torch.nn.SiLU"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block33",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 33,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 76,
+    "line_end": 78,
+    "torch_calls": [
+      "torch.nn.Conv2d",
+      "torch.nn.SiLU"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": true
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block34",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 34,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 79,
+    "line_end": 81,
+    "torch_calls": [
+      "torch.nn.Sequential",
+      "torch.nn.Conv2d"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block35",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 35,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 82,
+    "line_end": 85,
+    "torch_calls": [
+      "torch.nn.ConvTranspose2d",
+      "torch.nn.SiLU"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block36",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 36,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 83,
+    "line_end": 85,
+    "torch_calls": [
+      "torch.nn.ConvTranspose2d",
+      "torch.nn.SiLU"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": true
+  },
+  {
+    "block_key": "stable_diffusion.SDAutoencoderKL.__init__.Block37",
+    "scope": "stable_diffusion.SDAutoencoderKL.__init__",
+    "block_id": 37,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 86,
+    "line_end": 86,
+    "torch_calls": [
+      "torch.nn.Sequential",
+      "torch.nn.Conv2d"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.SDUNetBlock.__init__.Block6",
+    "scope": "stable_diffusion.SDUNetBlock.__init__",
+    "block_id": 6,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 15,
+    "line_end": 19,
+    "torch_calls": [
+      "torch.nn.Conv2d",
+      "torch.nn.GroupNorm",
+      "torch.nn.SiLU"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.StableDiffusionPipeline.forward.Block62",
+    "scope": "stable_diffusion.StableDiffusionPipeline.forward",
+    "block_id": 62,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 117,
+    "line_end": 119,
+    "torch_calls": [
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.StableDiffusionPipeline.forward.Block63",
+    "scope": "stable_diffusion.StableDiffusionPipeline.forward",
+    "block_id": 63,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 119,
+    "line_end": 119,
+    "torch_calls": [
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.StableDiffusionUNet.__init__.Block16",
+    "scope": "stable_diffusion.StableDiffusionUNet.__init__",
+    "block_id": 16,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 41,
+    "line_end": 43,
+    "torch_calls": [
+      "torch.nn.ModuleList"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "stable_diffusion.StableDiffusionUNet.__init__.Block19",
+    "scope": "stable_diffusion.StableDiffusionUNet.__init__",
+    "block_id": 19,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py",
+    "line_start": 47,
+    "line_end": 47,
+    "torch_calls": [
+      "torch.nn.Conv2d"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_dataset.Block2",
+    "scope": "text_dataset",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py",
+    "line_start": 2,
+    "line_end": 56,
+    "torch_calls": [
+      "torch.tensor",
+      "torch.ones",
+      "torch.nn.functional.pad"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_dataset.TextDataset.__getitem__.Block22",
+    "scope": "text_dataset.TextDataset.__getitem__",
+    "block_id": 22,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py",
+    "line_start": 51,
+    "line_end": 56,
+    "torch_calls": [
+      "torch.tensor"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_dataset.TextDataset._make_example.Block12",
+    "scope": "text_dataset.TextDataset._make_example",
+    "block_id": 12,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py",
+    "line_start": 30,
+    "line_end": 43,
+    "torch_calls": [
+      "torch.tensor",
+      "torch.ones",
+      "torch.nn.functional.pad"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_dataset.TextDataset._make_example.Block13",
+    "scope": "text_dataset.TextDataset._make_example",
+    "block_id": 13,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py",
+    "line_start": 37,
+    "line_end": 43,
+    "torch_calls": [
+      "torch.nn.functional.pad"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_transformer.Block2",
+    "scope": "text_transformer",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py",
+    "line_start": 2,
+    "line_end": 64,
+    "torch_calls": [
+      "torch.nn.Embedding",
+      "torch.nn.Parameter",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.Sequential",
+      "torch.nn.Linear",
+      "torch.nn.GELU",
+      "torch.nn.Dropout",
+      "torch.randn"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "text_transformer.TextTransformer.__init__.Block6",
+    "scope": "text_transformer.TextTransformer.__init__",
+    "block_id": 6,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py",
+    "line_start": 26,
+    "line_end": 44,
+    "torch_calls": [
+      "torch.nn.Embedding",
+      "torch.nn.Parameter",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.Sequential",
+      "torch.randn",
+      "torch.nn.Linear",
+      "torch.nn.GELU",
+      "torch.nn.Dropout"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.Block2",
+    "scope": "train",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 5,
+    "line_end": 169,
+    "torch_calls": [
+      "torch.device",
+      "torch.cuda.is_available",
+      "torch.stack",
+      "torch.utils.data.DataLoader",
+      "torch.optim.AdamW",
+      "torch.nn.CrossEntropyLoss",
+      "torch.nn.utils.clip_grad_norm_",
+      "torch.randn_like",
+      "torch.nn.functional.mse_loss",
+      "torch.randint",
+      "torch.manual_seed"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.collate_text.Block8",
+    "scope": "train.collate_text",
+    "block_id": 8,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 25,
+    "line_end": 29,
+    "torch_calls": [
+      "torch.stack"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.get_device.Block4",
+    "scope": "train.get_device",
+    "block_id": 4,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 21,
+    "line_end": 21,
+    "torch_calls": [
+      "torch.device",
+      "torch.cuda.is_available"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.main.Block39",
+    "scope": "train.main",
+    "block_id": 39,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 151,
+    "line_end": 165,
+    "torch_calls": [
+      "torch.manual_seed"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_stable_diffusion.Block21",
+    "scope": "train.train_stable_diffusion",
+    "block_id": 21,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 76,
+    "line_end": 86,
+    "torch_calls": [
+      "torch.utils.data.DataLoader",
+      "torch.optim.AdamW"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_stable_diffusion.Block22",
+    "scope": "train.train_stable_diffusion",
+    "block_id": 22,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 87,
+    "line_end": 101,
+    "torch_calls": [
+      "torch.randn_like",
+      "torch.nn.functional.mse_loss",
+      "torch.randint"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_stable_diffusion.Block25",
+    "scope": "train.train_stable_diffusion",
+    "block_id": 25,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 89,
+    "line_end": 100,
+    "torch_calls": [
+      "torch.randn_like",
+      "torch.nn.functional.mse_loss",
+      "torch.randint"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_stable_diffusion.Block26",
+    "scope": "train.train_stable_diffusion",
+    "block_id": 26,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 90,
+    "line_end": 100,
+    "torch_calls": [
+      "torch.randn_like",
+      "torch.randint.long",
+      "torch.nn.functional.mse_loss",
+      "torch.randint"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": true
+  },
+  {
+    "block_key": "train.train_text_transformer.Block12",
+    "scope": "train.train_text_transformer",
+    "block_id": 12,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 38,
+    "line_end": 53,
+    "torch_calls": [
+      "torch.utils.data.DataLoader",
+      "torch.optim.AdamW",
+      "torch.nn.CrossEntropyLoss"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_text_transformer.Block13",
+    "scope": "train.train_text_transformer",
+    "block_id": 13,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 54,
+    "line_end": 67,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_text_transformer.Block16",
+    "scope": "train.train_text_transformer",
+    "block_id": 16,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 56,
+    "line_end": 66,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_text_transformer.Block17",
+    "scope": "train.train_text_transformer",
+    "block_id": 17,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 57,
+    "line_end": 66,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": true
+  },
+  {
+    "block_key": "train.train_vit_classifier.Block30",
+    "scope": "train.train_vit_classifier",
+    "block_id": 30,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 110,
+    "line_end": 128,
+    "torch_calls": [
+      "torch.utils.data.DataLoader",
+      "torch.optim.AdamW",
+      "torch.nn.CrossEntropyLoss"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_vit_classifier.Block31",
+    "scope": "train.train_vit_classifier",
+    "block_id": 31,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 129,
+    "line_end": 147,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_vit_classifier.Block34",
+    "scope": "train.train_vit_classifier",
+    "block_id": 34,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 133,
+    "line_end": 145,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": true,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "train.train_vit_classifier.Block35",
+    "scope": "train.train_vit_classifier",
+    "block_id": 35,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/train.py",
+    "line_start": 134,
+    "line_end": 145,
+    "torch_calls": [
+      "torch.nn.utils.clip_grad_norm_"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": true
+  },
+  {
+    "block_key": "vit_classifier.Block2",
+    "scope": "vit_classifier",
+    "block_id": 2,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py",
+    "line_start": 2,
+    "line_end": 83,
+    "torch_calls": [
+      "torch.nn.Conv2d",
+      "torch.nn.Parameter",
+      "torch.nn.init.trunc_normal_",
+      "torch.nn.Dropout",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.LayerNorm",
+      "torch.nn.Linear",
+      "torch.cat",
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "vit_classifier.PatchEmbedding.__init__.Block6",
+    "scope": "vit_classifier.PatchEmbedding.__init__",
+    "block_id": 6,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py",
+    "line_start": 18,
+    "line_end": 23,
+    "torch_calls": [
+      "torch.nn.Conv2d"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "vit_classifier.ViTClassifier.__init__.Block16",
+    "scope": "vit_classifier.ViTClassifier.__init__",
+    "block_id": 16,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py",
+    "line_start": 47,
+    "line_end": 71,
+    "torch_calls": [
+      "torch.nn.Parameter",
+      "torch.nn.init.trunc_normal_",
+      "torch.nn.Dropout",
+      "torch.nn.TransformerEncoderLayer",
+      "torch.nn.TransformerEncoder",
+      "torch.nn.LayerNorm",
+      "torch.nn.Linear",
+      "torch.zeros"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  },
+  {
+    "block_key": "vit_classifier.ViTClassifier.forward.Block19",
+    "scope": "vit_classifier.ViTClassifier.forward",
+    "block_id": 19,
+    "file": "/home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py",
+    "line_start": 74,
+    "line_end": 83,
+    "torch_calls": [
+      "torch.cat"
+    ],
+    "is_loop_header": false,
+    "is_loop_backedge": false
+  }
+]

@@ -1,0 +1,360 @@
+Trace TB events: 1507
+Trace unique TB names (full): 38
+Trace unique TB keys (base): 38
+Trace aten ops: 55182
+
+==============================
+Torch Boundary Time Ranking (overlap-based, aten-only)
+==============================
+
+  3488.964 ms  TB:train.Block2
+     189.948 ms  aten::conv2d
+     189.295 ms  aten::convolution
+     188.143 ms  aten::_convolution
+     183.057 ms  aten::cudnn_convolution
+     177.672 ms  aten::linear
+     174.649 ms  aten::mm
+     169.604 ms  aten::to
+     167.945 ms  aten::_to_copy
+     143.866 ms  aten::matmul
+     135.013 ms  aten::empty_strided
+
+  3488.964 ms  TB:train.main.Block39
+     189.948 ms  aten::conv2d
+     189.295 ms  aten::convolution
+     188.143 ms  aten::_convolution
+     183.057 ms  aten::cudnn_convolution
+     177.672 ms  aten::linear
+     174.649 ms  aten::mm
+     169.604 ms  aten::to
+     167.945 ms  aten::_to_copy
+     143.866 ms  aten::matmul
+     135.013 ms  aten::empty_strided
+
+  2646.392 ms  TB:train.train_text_transformer.Block17
+     325.802 ms  aten::linear
+     314.154 ms  aten::mm
+     278.662 ms  aten::matmul
+     119.170 ms  aten::masked_fill_
+      74.040 ms  aten::linalg_vector_norm
+      68.142 ms  aten::_foreach_sqrt
+      68.134 ms  aten::cross_entropy_loss
+      59.066 ms  aten::sum
+      56.884 ms  aten::clone
+      55.001 ms  aten::copy_
+
+  1928.459 ms  TB:train.train_stable_diffusion.Block26
+     356.294 ms  aten::conv2d
+     355.216 ms  aten::convolution
+     353.774 ms  aten::_convolution
+     346.436 ms  aten::cudnn_convolution
+     108.806 ms  aten::convolution_backward
+      82.614 ms  aten::mse_loss_backward
+      63.250 ms  aten::mse_loss
+      55.832 ms  aten::group_norm
+      55.586 ms  aten::native_group_norm
+      28.624 ms  aten::mean
+
+  1331.022 ms  TB:train.train_text_transformer.Block13
+     162.901 ms  aten::linear
+     157.077 ms  aten::mm
+     139.331 ms  aten::matmul
+      59.585 ms  aten::masked_fill_
+      37.020 ms  aten::linalg_vector_norm
+      34.071 ms  aten::_foreach_sqrt
+      34.067 ms  aten::cross_entropy_loss
+      29.533 ms  aten::sum
+      28.442 ms  aten::clone
+      28.171 ms  aten::copy_
+
+  1331.022 ms  TB:train.train_text_transformer.Block16
+     162.901 ms  aten::linear
+     157.077 ms  aten::mm
+     139.331 ms  aten::matmul
+      59.585 ms  aten::masked_fill_
+      37.020 ms  aten::linalg_vector_norm
+      34.071 ms  aten::_foreach_sqrt
+      34.067 ms  aten::cross_entropy_loss
+      29.533 ms  aten::sum
+      28.442 ms  aten::clone
+      28.171 ms  aten::copy_
+
+   970.516 ms  TB:train.train_stable_diffusion.Block22
+     178.147 ms  aten::conv2d
+     177.608 ms  aten::convolution
+     176.887 ms  aten::_convolution
+     173.218 ms  aten::cudnn_convolution
+      54.403 ms  aten::convolution_backward
+      41.307 ms  aten::mse_loss_backward
+      31.625 ms  aten::mse_loss
+      27.916 ms  aten::group_norm
+      27.793 ms  aten::native_group_norm
+      14.312 ms  aten::mean
+
+   970.516 ms  TB:train.train_stable_diffusion.Block25
+     178.147 ms  aten::conv2d
+     177.608 ms  aten::convolution
+     176.887 ms  aten::_convolution
+     173.218 ms  aten::cudnn_convolution
+      54.403 ms  aten::convolution_backward
+      41.307 ms  aten::mse_loss_backward
+      31.625 ms  aten::mse_loss
+      27.916 ms  aten::group_norm
+      27.793 ms  aten::native_group_norm
+      14.312 ms  aten::mean
+
+   759.701 ms  TB:train.train_vit_classifier.Block35
+      63.588 ms  aten::copy_
+      41.395 ms  aten::to
+      40.791 ms  aten::_to_copy
+      35.144 ms  aten::mm
+      29.542 ms  aten::linear
+      26.828 ms  aten::clone
+      25.882 ms  aten::_scaled_dot_product_efficient_attention_backward
+      23.628 ms  aten::sum
+      23.602 ms  aten::conv2d
+      23.374 ms  aten::convolution
+
+   550.302 ms  TB:train.train_vit_classifier.Block31
+      76.157 ms  aten::stack
+      75.510 ms  aten::cat
+      38.682 ms  aten::copy_
+      27.875 ms  aten::to
+      27.468 ms  aten::_to_copy
+      17.572 ms  aten::mm
+      14.771 ms  aten::linear
+      13.414 ms  aten::clone
+      12.941 ms  aten::_scaled_dot_product_efficient_attention_backward
+      11.814 ms  aten::sum
+
+   550.302 ms  TB:train.train_vit_classifier.Block34
+      76.157 ms  aten::stack
+      75.510 ms  aten::cat
+      38.682 ms  aten::copy_
+      27.875 ms  aten::to
+      27.468 ms  aten::_to_copy
+      17.572 ms  aten::mm
+      14.771 ms  aten::linear
+      13.414 ms  aten::clone
+      12.941 ms  aten::_scaled_dot_product_efficient_attention_backward
+      11.814 ms  aten::sum
+
+   446.281 ms  TB:train.train_text_transformer.Block12
+     132.171 ms  aten::to
+     131.672 ms  aten::_to_copy
+     127.814 ms  aten::empty_strided
+      10.685 ms  aten::copy_
+       8.872 ms  aten::pad
+       7.193 ms  aten::constant_pad_nd
+       6.767 ms  aten::clone
+       3.759 ms  aten::sum
+       3.019 ms  aten::ones
+       2.273 ms  aten::narrow
+
+   242.251 ms  TB:vit_classifier.ViTClassifier.forward.Block19
+      29.542 ms  aten::linear
+      18.293 ms  aten::conv2d
+      18.164 ms  aten::convolution
+      17.652 ms  aten::_convolution
+      15.215 ms  aten::cudnn_convolution
+      12.880 ms  aten::addmm
+      12.022 ms  aten::dropout
+      11.288 ms  aten::native_dropout
+       9.070 ms  aten::matmul
+       8.950 ms  aten::layer_norm
+
+   176.064 ms  TB:train.train_vit_classifier.Block30
+      34.844 ms  aten::randn
+      34.207 ms  aten::normal_
+      28.541 ms  aten::min
+      23.713 ms  aten::div
+      22.449 ms  aten::sub
+      11.174 ms  aten::max
+       4.964 ms  aten::erfinv_
+       3.770 ms  aten::to
+       3.365 ms  aten::_to_copy
+       3.132 ms  aten::copy_
+
+   166.803 ms  TB:image_dataset.ImageDataset._make_example.Block9
+      36.189 ms  aten::randn
+      35.328 ms  aten::normal_
+      29.688 ms  aten::min
+      25.662 ms  aten::div
+      24.361 ms  aten::sub
+      11.527 ms  aten::max
+       1.407 ms  aten::add
+       1.190 ms  aten::to
+       0.820 ms  aten::_to_copy
+       0.380 ms  aten::empty
+
+    28.718 ms  TB:train.train_stable_diffusion.Block21
+       6.251 ms  aten::uniform_
+       4.945 ms  aten::to
+       4.786 ms  aten::_to_copy
+       4.193 ms  aten::copy_
+       1.949 ms  aten::div
+       1.912 ms  aten::sub
+       1.345 ms  aten::randn
+       1.147 ms  aten::min
+       1.121 ms  aten::normal_
+       0.398 ms  aten::add
+
+    25.779 ms  TB:text_dataset.TextDataset._make_example.Block12
+       8.872 ms  aten::pad
+       7.193 ms  aten::constant_pad_nd
+       3.019 ms  aten::ones
+       2.273 ms  aten::narrow
+       1.716 ms  aten::fill_
+       0.862 ms  aten::copy_
+       0.770 ms  aten::empty
+       0.622 ms  aten::slice
+       0.224 ms  aten::to
+       0.154 ms  aten::lift_fresh
+
+    21.286 ms  TB:text_transformer.TextTransformer.__init__.Block6
+       7.051 ms  aten::copy_
+       6.767 ms  aten::clone
+       2.232 ms  aten::mul
+       1.222 ms  aten::normal_
+       0.877 ms  aten::select
+       0.769 ms  aten::to
+       0.623 ms  aten::uniform_
+       0.577 ms  aten::_to_copy
+       0.495 ms  aten::fill_
+       0.397 ms  aten::detach
+
+    20.131 ms  TB:text_dataset.TextDataset._make_example.Block13
+       8.872 ms  aten::pad
+       7.193 ms  aten::constant_pad_nd
+       2.273 ms  aten::narrow
+       0.862 ms  aten::copy_
+       0.622 ms  aten::slice
+       0.247 ms  aten::empty
+       0.043 ms  aten::as_strided
+       0.019 ms  aten::fill_
+
+     9.900 ms  TB:vit_classifier.ViTClassifier.__init__.Block16
+       4.964 ms  aten::erfinv_
+       1.190 ms  aten::uniform_
+       0.751 ms  aten::clamp_
+       0.569 ms  aten::zeros
+       0.560 ms  aten::zero_
+       0.558 ms  aten::fill_
+       0.535 ms  aten::clone
+       0.470 ms  aten::copy_
+       0.116 ms  aten::add_
+       0.097 ms  aten::mul_
+
+     4.374 ms  TB:train.collate_text.Block8
+       2.915 ms  aten::stack
+       1.144 ms  aten::cat
+       0.197 ms  aten::unsqueeze
+       0.065 ms  aten::as_strided
+       0.053 ms  aten::view
+
+     3.764 ms  TB:stable_diffusion.SDUNetBlock.__init__.Block6
+       3.703 ms  aten::uniform_
+       0.047 ms  aten::empty
+       0.006 ms  aten::fill_
+       0.006 ms  aten::detach
+       0.002 ms  aten::zero_
+
+     1.612 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block35
+       1.604 ms  aten::uniform_
+       0.007 ms  aten::empty
+       0.001 ms  aten::detach
+
+     1.612 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block36
+       1.604 ms  aten::uniform_
+       0.007 ms  aten::empty
+       0.001 ms  aten::detach
+
+     0.917 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block32
+       0.906 ms  aten::uniform_
+       0.007 ms  aten::empty
+       0.004 ms  aten::detach
+
+     0.917 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block33
+       0.906 ms  aten::uniform_
+       0.007 ms  aten::empty
+       0.004 ms  aten::detach
+
+     0.287 ms  TB:text_dataset.TextDataset.__getitem__.Block22
+       0.212 ms  aten::detach_
+       0.073 ms  aten::empty
+       0.001 ms  aten::to
+       0.001 ms  aten::lift_fresh
+
+     0.224 ms  TB:vit_classifier.PatchEmbedding.__init__.Block6
+       0.217 ms  aten::uniform_
+       0.005 ms  aten::detach
+       0.002 ms  aten::empty
+
+     0.022 ms  TB:stable_diffusion.StableDiffusionUNet.__init__.Block19
+       0.017 ms  aten::uniform_
+       0.003 ms  aten::empty
+       0.002 ms  aten::detach
+
+     0.020 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block34
+       0.014 ms  aten::uniform_
+       0.004 ms  aten::empty
+       0.002 ms  aten::detach
+
+     0.013 ms  TB:stable_diffusion.SDAutoencoderKL.__init__.Block37
+       0.007 ms  aten::uniform_
+       0.004 ms  aten::empty
+       0.002 ms  aten::detach
+
+==============================
+Execution coverage (plan vs trace)
+==============================
+Plan TB keys: 42
+Executed TB keys (intersection): 38
+Missing TB keys (not seen in trace): 4
+
+Executed (all):
+  TB:image_dataset.Block2
+  TB:image_dataset.ImageDataset._make_example.Block9
+  TB:stable_diffusion.Block2
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block32
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block33
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block34
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block35
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block36
+  TB:stable_diffusion.SDAutoencoderKL.__init__.Block37
+  TB:stable_diffusion.SDUNetBlock.__init__.Block6
+  TB:stable_diffusion.StableDiffusionUNet.__init__.Block16
+  TB:stable_diffusion.StableDiffusionUNet.__init__.Block19
+  TB:text_dataset.Block2
+  TB:text_dataset.TextDataset.__getitem__.Block22
+  TB:text_dataset.TextDataset._make_example.Block12
+  TB:text_dataset.TextDataset._make_example.Block13
+  TB:text_transformer.Block2
+  TB:text_transformer.TextTransformer.__init__.Block6
+  TB:train.Block2
+  TB:train.collate_text.Block8
+  TB:train.get_device.Block4
+  TB:train.main.Block39
+  TB:train.train_stable_diffusion.Block21
+  TB:train.train_stable_diffusion.Block22
+  TB:train.train_stable_diffusion.Block25
+  TB:train.train_stable_diffusion.Block26
+  TB:train.train_text_transformer.Block12
+  TB:train.train_text_transformer.Block13
+  TB:train.train_text_transformer.Block16
+  TB:train.train_text_transformer.Block17
+  TB:train.train_vit_classifier.Block30
+  TB:train.train_vit_classifier.Block31
+  TB:train.train_vit_classifier.Block34
+  TB:train.train_vit_classifier.Block35
+  TB:vit_classifier.Block2
+  TB:vit_classifier.PatchEmbedding.__init__.Block6
+  TB:vit_classifier.ViTClassifier.__init__.Block16
+  TB:vit_classifier.ViTClassifier.forward.Block19
+
+Missing (first 30):
+  TB:model.Block1
+  TB:model.ToyTransformerClassifier.__init__.Block5
+  TB:stable_diffusion.StableDiffusionPipeline.forward.Block62
+  TB:stable_diffusion.StableDiffusionPipeline.forward.Block63
+

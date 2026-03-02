@@ -1,0 +1,3570 @@
+Exported torch boundary plan JSON: /home/maihanwe/experiment_statementlevel/torch_boundaries.json (42 blocks)
+ENTRY: train.main.Block39
+TORCH BOUNDARY ROOTS: ['torch', 'torch.nn', 'torch.nn.functional', 'torch.optim', 'torch.utils']
+Detected 42 torch-boundary block(s).
+
+=== BLOCKS BY METHOD (node ids) ===
+
+-- __init__ --
+  NodeID: 1
+  Key: __init__.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/__init__.py:1-1
+  Successors: [__init__.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """Model components: text transformer, ViT, Stable Diffusion."""
+
+  NodeID: 2
+  Key: __init__.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/__init__.py:2-6
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | from toy_transformer_pkg.models.text_transformer import TextTransformer
+    | from toy_transformer_pkg.models.vit_classifier import ViTClassifier
+    | from toy_transformer_pkg.models.stable_diffusion import StableDiffusionPipeline
+    | __all__ = ['TextTransformer', 'ViTClassifier', 'StableDiffusionPipeline']
+
+-- image_dataset --
+  NodeID: 3
+  Key: image_dataset.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:1-1
+  Successors: [image_dataset.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """Image dataset for ViT and Stable Diffusion."""
+
+  NodeID: 4
+  Key: image_dataset.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:2-42
+  Successors: []
+  TorchBoundaryCalls: torch.randn
+  Code:
+    | import random
+    | from typing import Tuple
+    | import torch
+    | from torch.utils.data import Dataset
+    | class ImageDataset(Dataset):
+    |     """
+    |     Synthetic image dataset for vision models.
+    |     Returns (image_tensor, label) for classification or (image_tensor,) for generation.
+    |     """
+    |     def __init__(self, num_samples: int=256, image_size: int=224,
+    |         num_channels: int=3, num_classes: int=10) ->None:
+    |         self.num_samples = num_samples
+    |         self.image_size = image_size
+    |         self.num_channels = num_channels
+    |         self.num_classes = num_classes
+    |         self.samples: list[Tuple[torch.Tensor, int]] = [self._make_example(
+    |             ) for _ in range(num_samples)]
+    |     def _make_example(self) ->Tuple[torch.Tensor, int]:
+    |         image = torch.randn(self.num_channels, self.image_size, self.image_size
+    |             ).float()
+    |         image = (image - image.min()) / (image.max() - image.min() + 1e-08)
+    |         label = random.randint(0, self.num_classes - 1)
+    |         return image, label
+    |     def __len__(self) ->int:
+    |         return self.num_samples
+    |     def __getitem__(self, idx: int) ->Tuple[torch.Tensor, int]:
+    |         return self.samples[idx]
+
+-- image_dataset.ImageDataset.__getitem__ --
+  NodeID: 5
+  Key: image_dataset.ImageDataset.__getitem__.Block17 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:42-42
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.samples[idx]
+
+-- image_dataset.ImageDataset.__init__ --
+  NodeID: 6
+  Key: image_dataset.ImageDataset.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:22-28
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | self.num_samples = num_samples
+    | self.image_size = image_size
+    | self.num_channels = num_channels
+    | self.num_classes = num_classes
+    | self.samples: list[Tuple[torch.Tensor, int]] = [self._make_example() for _ in
+    |     range(num_samples)]
+
+-- image_dataset.ImageDataset.__len__ --
+  NodeID: 7
+  Key: image_dataset.ImageDataset.__len__.Block13 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:39-39
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.num_samples
+
+-- image_dataset.ImageDataset._make_example --
+  NodeID: 8
+  Key: image_dataset.ImageDataset._make_example.Block9 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:31-36
+  Successors: []
+  TorchBoundaryCalls: torch.randn.float, torch.randn
+  Code:
+    | image = torch.randn(self.num_channels, self.image_size, self.image_size).float(
+    |     )
+    | image = (image - image.min()) / (image.max() - image.min() + 1e-08)
+    | label = random.randint(0, self.num_classes - 1)
+    | return image, label
+
+-- model --
+  NodeID: 9
+  Key: model.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/model.py:1-42
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+  Code:
+    | import torch
+    | from torch import nn
+    | class ToyTransformerClassifier(nn.Module):
+    |     def __init__(self, vocab_size: int=100, d_model: int=64, nhead: int=4,
+    |         num_layers: int=2, dim_feedforward: int=128, num_classes: int=2,
+    |         max_seq_len: int=32) ->None:
+    |         super().__init__()
+    |         self.d_model = d_model
+    |         self.embedding = nn.Embedding(vocab_size, d_model)
+    |         self.positional_encoding = nn.Parameter(torch.zeros(1, max_seq_len,
+    |             d_model), requires_grad=True)
+    |         encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=
+    |             nhead, dim_feedforward=dim_feedforward, batch_first=True)
+    |         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=
+    |             num_layers)
+    |         self.classifier = nn.Linear(d_model, num_classes)
+    |     def forward(self, input_ids: torch.Tensor) ->torch.Tensor:
+    |         """
+    |         input_ids: (batch_size, seq_len) of token indices.
+    |         """
+    |         x = self.embedding(input_ids) * self.d_model ** 0.5
+    |         seq_len = x.size(1)
+    |         x = x + self.positional_encoding[:, :seq_len, :]
+    |         encoded = self.encoder(x)
+    |         pooled = encoded.mean(dim=1)
+    |         logits = self.classifier(pooled)
+    |         return logits
+
+-- model.ToyTransformerClassifier.__init__ --
+  NodeID: 10
+  Key: model.ToyTransformerClassifier.__init__.Block5 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/model.py:16-30
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+  Code:
+    | super().__init__()
+    | self.d_model = d_model
+    | self.embedding = nn.Embedding(vocab_size, d_model)
+    | self.positional_encoding = nn.Parameter(torch.zeros(1, max_seq_len, d_model
+    |     ), requires_grad=True)
+    | encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead,
+    |     dim_feedforward=dim_feedforward, batch_first=True)
+    | self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+    | self.classifier = nn.Linear(d_model, num_classes)
+
+-- model.ToyTransformerClassifier.forward --
+  NodeID: 11
+  Key: model.ToyTransformerClassifier.forward.Block8 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/model.py:33-42
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | """
+    |         input_ids: (batch_size, seq_len) of token indices.
+    |         """
+    | x = self.embedding(input_ids) * self.d_model ** 0.5
+    | seq_len = x.size(1)
+    | x = x + self.positional_encoding[:, :seq_len, :]
+    | encoded = self.encoder(x)
+    | pooled = encoded.mean(dim=1)
+    | logits = self.classifier(pooled)
+    | return logits
+
+-- stable_diffusion --
+  NodeID: 12
+  Key: stable_diffusion.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:1-4
+  Successors: [stable_diffusion.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """
+    | Stable Diffusion components (minimal UNet-style + VAE-style for training).
+    | Uses diffusers when available; otherwise a lightweight placeholder.
+    | """
+
+  NodeID: 13
+  Key: stable_diffusion.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:5-121
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU, torch.nn.ModuleList, torch.nn.Sequential, torch.nn.ConvTranspose2d, torch.zeros
+  Code:
+    | from typing import Optional
+    | import torch
+    | from torch import nn
+    | class SDUNetBlock(nn.Module):
+    |     """Minimal UNet-style block for diffusion."""
+    |     def __init__(self, in_ch: int, out_ch: int) ->None:
+    |         super().__init__()
+    |         self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1)
+    |         self.norm = nn.GroupNorm(8, out_ch)
+    |         self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1)
+    |         self.act = nn.SiLU()
+    |     def forward(self, x: torch.Tensor) ->torch.Tensor:
+    |         x = self.conv1(x)
+    |         x = self.norm(x)
+    |         x = self.act(x)
+    |         x = self.conv2(x)
+    |         return self.act(x)
+    | class StableDiffusionUNet(nn.Module):
+    |     """
+    |     Minimal UNet-style model mimicking SD architecture.
+    |     Used for diffusion denoising training.
+    |     """
+    |     def __init__(self, in_channels: int=4, out_channels: int=4,
+    |         block_channels: tuple=(64, 128, 256)) ->None:
+    |         super().__init__()
+    |         self.blocks = nn.ModuleList()
+    |         prev = in_channels
+    |         for ch in block_channels:
+    |             self.blocks.append(SDUNetBlock(prev, ch))
+    |             prev = ch
+    |         self.final = nn.Conv2d(prev, out_channels, 3, padding=1)
+    |     def forward(self, x: torch.Tensor, timestep: Optional[torch.Tensor]=
+    |         None, encoder_hidden_states: Optional[torch.Tensor]=None
+    |         ) ->torch.Tensor:
+    |         for block in self.blocks:
+    |             x = block(x)
+    |         return self.final(x)
+    | class SDAutoencoderKL(nn.Module):
+    |     """
+    |     Minimal VAE-style autoencoder (SD style).
+    |     Encodes/decodes latents for diffusion.
+    |     """
+    |     def __init__(self, in_channels: int=3, latent_channels: int=4,
+    |         block_channels: tuple=(128, 256)) ->None:
+    |         super().__init__()
+    |         layers = []
+    |         prev = in_channels
+    |         for ch in block_channels:
+    |             layers.append(nn.Conv2d(prev, ch, 3, stride=2, padding=1))
+    |             layers.append(nn.SiLU())
+    |             prev = ch
+    |         self.encoder = nn.Sequential(*layers, nn.Conv2d(prev,
+    |             latent_channels, 3, padding=1))
+    |         d_layers = []
+    |         prev = latent_channels
+    |         for ch in reversed(block_channels):
+    |             d_layers.append(nn.ConvTranspose2d(prev, ch, 4, stride=2,
+    |                 padding=1))
+    |             d_layers.append(nn.SiLU())
+    |             prev = ch
+    |         self.decoder = nn.Sequential(*d_layers, nn.Conv2d(prev, in_channels,
+    |             3, padding=1))
+    |     def encode(self, x: torch.Tensor) ->torch.Tensor:
+    |         return self.encoder(x)
+    |     def decode(self, z: torch.Tensor) ->torch.Tensor:
+    |         return self.decoder(z)
+    | class StableDiffusionPipeline(nn.Module):
+    |     """
+    |     Simplified Stable Diffusion training pipeline.
+    |     Combines VAE (encode/decode) and UNet (denoise) for end-to-end training.
+    |     """
+    |     def __init__(self) ->None:
+    |         super().__init__()
+    |         self.vae = SDAutoencoderKL(in_channels=3, latent_channels=4)
+    |         self.unet = StableDiffusionUNet(in_channels=4, out_channels=4)
+    |     def encode_image(self, images: torch.Tensor) ->torch.Tensor:
+    |         return self.vae.encode(images)
+    |     def decode_latent(self, latents: torch.Tensor) ->torch.Tensor:
+    |         return self.vae.decode(latents)
+    |     def forward(self, images: torch.Tensor, timesteps: Optional[torch.
+    |         Tensor]=None) ->torch.Tensor:
+    |         latents = self.encode_image(images)
+    |         if timesteps is None:
+    |             timesteps = torch.zeros(images.size(0), device=images.device,
+    |                 dtype=torch.long)
+    |         noise_pred = self.unet(latents, timestep=timesteps)
+    |         return noise_pred
+
+-- stable_diffusion.SDAutoencoderKL.__init__ --
+  NodeID: 14
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block31 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:72-74
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block32]
+  TorchBoundaryCalls: (none)
+  Code:
+    | super().__init__()
+    | layers = []
+    | prev = in_channels
+
+  NodeID: 15
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:75-78
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block33, stable_diffusion.SDAutoencoderKL.__init__.Block34]
+  TorchBoundaryCalls: torch.nn.Conv2d, torch.nn.SiLU
+  Code:
+    | for ch in block_channels:
+    |     layers.append(nn.Conv2d(prev, ch, 3, stride=2, padding=1))
+    |     layers.append(nn.SiLU())
+    |     prev = ch
+
+  NodeID: 16
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block33 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:76-78
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block32]
+  TorchBoundaryCalls: torch.nn.Conv2d, torch.nn.SiLU
+  Code:
+    | layers.append(nn.Conv2d(prev, ch, 3, stride=2, padding=1))
+    | layers.append(nn.SiLU())
+    | prev = ch
+
+  NodeID: 17
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block34 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:79-81
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block35]
+  TorchBoundaryCalls: torch.nn.Sequential, torch.nn.Conv2d
+  Code:
+    | self.encoder = nn.Sequential(*layers, nn.Conv2d(prev, latent_channels, 3,
+    |     padding=1))
+    | d_layers = []
+    | prev = latent_channels
+
+  NodeID: 18
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:82-85
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block36, stable_diffusion.SDAutoencoderKL.__init__.Block37]
+  TorchBoundaryCalls: torch.nn.ConvTranspose2d, torch.nn.SiLU
+  Code:
+    | for ch in reversed(block_channels):
+    |     d_layers.append(nn.ConvTranspose2d(prev, ch, 4, stride=2, padding=1))
+    |     d_layers.append(nn.SiLU())
+    |     prev = ch
+
+  NodeID: 19
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block36 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:83-85
+  Successors: [stable_diffusion.SDAutoencoderKL.__init__.Block35]
+  TorchBoundaryCalls: torch.nn.ConvTranspose2d, torch.nn.SiLU
+  Code:
+    | d_layers.append(nn.ConvTranspose2d(prev, ch, 4, stride=2, padding=1))
+    | d_layers.append(nn.SiLU())
+    | prev = ch
+
+  NodeID: 20
+  Key: stable_diffusion.SDAutoencoderKL.__init__.Block37 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:86-86
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Sequential, torch.nn.Conv2d
+  Code:
+    | self.decoder = nn.Sequential(*d_layers, nn.Conv2d(prev, in_channels, 3,
+    |     padding=1))
+
+-- stable_diffusion.SDAutoencoderKL.decode --
+  NodeID: 21
+  Key: stable_diffusion.SDAutoencoderKL.decode.Block44 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:92-92
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.decoder(z)
+
+-- stable_diffusion.SDAutoencoderKL.encode --
+  NodeID: 22
+  Key: stable_diffusion.SDAutoencoderKL.encode.Block40 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:89-89
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.encoder(x)
+
+-- stable_diffusion.SDUNetBlock.__init__ --
+  NodeID: 23
+  Key: stable_diffusion.SDUNetBlock.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:15-19
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+  Code:
+    | super().__init__()
+    | self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1)
+    | self.norm = nn.GroupNorm(8, out_ch)
+    | self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1)
+    | self.act = nn.SiLU()
+
+-- stable_diffusion.SDUNetBlock.forward --
+  NodeID: 24
+  Key: stable_diffusion.SDUNetBlock.forward.Block9 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:22-26
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | x = self.conv1(x)
+    | x = self.norm(x)
+    | x = self.act(x)
+    | x = self.conv2(x)
+    | return self.act(x)
+
+-- stable_diffusion.StableDiffusionPipeline.__init__ --
+  NodeID: 25
+  Key: stable_diffusion.StableDiffusionPipeline.__init__.Block51 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:102-104
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | super().__init__()
+    | self.vae = SDAutoencoderKL(in_channels=3, latent_channels=4)
+    | self.unet = StableDiffusionUNet(in_channels=4, out_channels=4)
+
+-- stable_diffusion.StableDiffusionPipeline.decode_latent --
+  NodeID: 26
+  Key: stable_diffusion.StableDiffusionPipeline.decode_latent.Block58 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:110-110
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.vae.decode(latents)
+
+-- stable_diffusion.StableDiffusionPipeline.encode_image --
+  NodeID: 27
+  Key: stable_diffusion.StableDiffusionPipeline.encode_image.Block54 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:107-107
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.vae.encode(images)
+
+-- stable_diffusion.StableDiffusionPipeline.forward --
+  NodeID: 28
+  Key: stable_diffusion.StableDiffusionPipeline.forward.Block62 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:117-119
+  Successors: [stable_diffusion.StableDiffusionPipeline.forward.Block63, stable_diffusion.StableDiffusionPipeline.forward.Block64]
+  TorchBoundaryCalls: torch.zeros
+  Code:
+    | latents = self.encode_image(images)
+    | if timesteps is None:
+    |     timesteps = torch.zeros(images.size(0), device=images.device, dtype=
+    |         torch.long)
+
+  NodeID: 29
+  Key: stable_diffusion.StableDiffusionPipeline.forward.Block63 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:119-119
+  Successors: [stable_diffusion.StableDiffusionPipeline.forward.Block64]
+  TorchBoundaryCalls: torch.zeros
+  Code:
+    | timesteps = torch.zeros(images.size(0), device=images.device, dtype=torch.long)
+
+  NodeID: 30
+  Key: stable_diffusion.StableDiffusionPipeline.forward.Block64 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:120-121
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | noise_pred = self.unet(latents, timestep=timesteps)
+    | return noise_pred
+
+-- stable_diffusion.StableDiffusionUNet.__init__ --
+  NodeID: 31
+  Key: stable_diffusion.StableDiffusionUNet.__init__.Block16 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:41-43
+  Successors: [stable_diffusion.StableDiffusionUNet.__init__.Block17]
+  TorchBoundaryCalls: torch.nn.ModuleList
+  Code:
+    | super().__init__()
+    | self.blocks = nn.ModuleList()
+    | prev = in_channels
+
+  NodeID: 32
+  Key: stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:44-46
+  Successors: [stable_diffusion.StableDiffusionUNet.__init__.Block18, stable_diffusion.StableDiffusionUNet.__init__.Block19]
+  TorchBoundaryCalls: (none)
+  Code:
+    | for ch in block_channels:
+    |     self.blocks.append(SDUNetBlock(prev, ch))
+    |     prev = ch
+
+  NodeID: 33
+  Key: stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:45-46
+  Successors: [stable_diffusion.StableDiffusionUNet.__init__.Block17]
+  TorchBoundaryCalls: (none)
+  Code:
+    | self.blocks.append(SDUNetBlock(prev, ch))
+    | prev = ch
+
+  NodeID: 34
+  Key: stable_diffusion.StableDiffusionUNet.__init__.Block19 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:47-47
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Conv2d
+  Code:
+    | self.final = nn.Conv2d(prev, out_channels, 3, padding=1)
+
+-- stable_diffusion.StableDiffusionUNet.forward --
+  NodeID: 35
+  Key: stable_diffusion.StableDiffusionUNet.forward.Block22 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:55-56
+  Successors: [stable_diffusion.StableDiffusionUNet.forward.Block23, stable_diffusion.StableDiffusionUNet.forward.Block24]
+  TorchBoundaryCalls: (none)
+  Code:
+    | for block in self.blocks:
+    |     x = block(x)
+
+  NodeID: 36
+  Key: stable_diffusion.StableDiffusionUNet.forward.Block23 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:56-56
+  Successors: [stable_diffusion.StableDiffusionUNet.forward.Block22]
+  TorchBoundaryCalls: (none)
+  Code:
+    | x = block(x)
+
+  NodeID: 37
+  Key: stable_diffusion.StableDiffusionUNet.forward.Block24 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:57-57
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.final(x)
+
+-- text_dataset --
+  NodeID: 38
+  Key: text_dataset.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:1-1
+  Successors: [text_dataset.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """Text dataset for transformer models."""
+
+  NodeID: 39
+  Key: text_dataset.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:2-56
+  Successors: []
+  TorchBoundaryCalls: torch.tensor, torch.ones, torch.nn.functional.pad
+  Code:
+    | import random
+    | from typing import Dict, Tuple
+    | import torch
+    | from torch.utils.data import Dataset
+    | class TextDataset(Dataset):
+    |     """
+    |     Synthetic text dataset for transformer training.
+    |     Each sample is tokenized text (input_ids, attention_mask) with a label.
+    |     """
+    |     def __init__(self, num_samples: int=1024, max_length: int=64,
+    |         vocab_size: int=1000) ->None:
+    |         self.num_samples = num_samples
+    |         self.max_length = max_length
+    |         self.vocab_size = vocab_size
+    |         self.pad_token_id = 0
+    |         self.samples: list[Tuple[torch.Tensor, torch.Tensor, int]] = []
+    |         for _ in range(num_samples):
+    |             self.samples.append(self._make_example())
+    |     def _make_example(self) ->Tuple[torch.Tensor, torch.Tensor, int]:
+    |         seq_len = random.randint(8, self.max_length)
+    |         input_ids = torch.tensor([random.randint(1, self.vocab_size - 1) for
+    |             _ in range(seq_len)], dtype=torch.long)
+    |         attention_mask = torch.ones(seq_len, dtype=torch.long)
+    |         if seq_len < self.max_length:
+    |             pad_len = self.max_length - seq_len
+    |             input_ids = torch.nn.functional.pad(input_ids, (0, pad_len),
+    |                 value=self.pad_token_id)
+    |             attention_mask = torch.nn.functional.pad(attention_mask, (0,
+    |                 pad_len), value=0)
+    |         label = int(input_ids.sum().item() % 3)
+    |         return input_ids[:self.max_length], attention_mask[:self.max_length
+    |             ], label
+    |     def __len__(self) ->int:
+    |         return self.num_samples
+    |     def __getitem__(self, idx: int) ->Dict[str, torch.Tensor]:
+    |         input_ids, attention_mask, label = self.samples[idx]
+    |         return {'input_ids': input_ids, 'attention_mask': attention_mask,
+    |             'labels': torch.tensor(label, dtype=torch.long)}
+
+-- text_dataset.TextDataset.__getitem__ --
+  NodeID: 40
+  Key: text_dataset.TextDataset.__getitem__.Block22 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:51-56
+  Successors: []
+  TorchBoundaryCalls: torch.tensor
+  Code:
+    | input_ids, attention_mask, label = self.samples[idx]
+    | return {'input_ids': input_ids, 'attention_mask': attention_mask, 'labels':
+    |     torch.tensor(label, dtype=torch.long)}
+
+-- text_dataset.TextDataset.__init__ --
+  NodeID: 41
+  Key: text_dataset.TextDataset.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:21-25
+  Successors: [text_dataset.TextDataset.__init__.Block7]
+  TorchBoundaryCalls: (none)
+  Code:
+    | self.num_samples = num_samples
+    | self.max_length = max_length
+    | self.vocab_size = vocab_size
+    | self.pad_token_id = 0
+    | self.samples: list[Tuple[torch.Tensor, torch.Tensor, int]] = []
+
+  NodeID: 42
+  Key: text_dataset.TextDataset.__init__.Block7 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:26-27
+  Successors: [text_dataset.TextDataset.__init__.Block8]
+  TorchBoundaryCalls: (none)
+  Code:
+    | for _ in range(num_samples):
+    |     self.samples.append(self._make_example())
+
+  NodeID: 43
+  Key: text_dataset.TextDataset.__init__.Block8 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:27-27
+  Successors: [text_dataset.TextDataset.__init__.Block7]
+  TorchBoundaryCalls: (none)
+  Code:
+    | self.samples.append(self._make_example())
+
+-- text_dataset.TextDataset.__len__ --
+  NodeID: 44
+  Key: text_dataset.TextDataset.__len__.Block18 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:48-48
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | return self.num_samples
+
+-- text_dataset.TextDataset._make_example --
+  NodeID: 45
+  Key: text_dataset.TextDataset._make_example.Block12 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:30-43
+  Successors: [text_dataset.TextDataset._make_example.Block13, text_dataset.TextDataset._make_example.Block14]
+  TorchBoundaryCalls: torch.tensor, torch.ones, torch.nn.functional.pad
+  Code:
+    | seq_len = random.randint(8, self.max_length)
+    | input_ids = torch.tensor([random.randint(1, self.vocab_size - 1) for _ in
+    |     range(seq_len)], dtype=torch.long)
+    | attention_mask = torch.ones(seq_len, dtype=torch.long)
+    | if seq_len < self.max_length:
+    |     pad_len = self.max_length - seq_len
+    |     input_ids = torch.nn.functional.pad(input_ids, (0, pad_len), value=self
+    |         .pad_token_id)
+    |     attention_mask = torch.nn.functional.pad(attention_mask, (0, pad_len),
+    |         value=0)
+
+  NodeID: 46
+  Key: text_dataset.TextDataset._make_example.Block13 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:37-43
+  Successors: [text_dataset.TextDataset._make_example.Block14]
+  TorchBoundaryCalls: torch.nn.functional.pad
+  Code:
+    | pad_len = self.max_length - seq_len
+    | input_ids = torch.nn.functional.pad(input_ids, (0, pad_len), value=self.
+    |     pad_token_id)
+    | attention_mask = torch.nn.functional.pad(attention_mask, (0, pad_len), value=0)
+
+  NodeID: 47
+  Key: text_dataset.TextDataset._make_example.Block14 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:44-45
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | label = int(input_ids.sum().item() % 3)
+    | return input_ids[:self.max_length], attention_mask[:self.max_length], label
+
+-- text_transformer --
+  NodeID: 48
+  Key: text_transformer.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:1-1
+  Successors: [text_transformer.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """Text transformer for sequence classification (accepts tokenized text input)."""
+
+  NodeID: 49
+  Key: text_transformer.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:2-64
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout, torch.randn
+  Code:
+    | import math
+    | from typing import Optional
+    | import torch
+    | from torch import nn
+    | class TextTransformer(nn.Module):
+    |     """
+    |     Transformer encoder for text classification.
+    |     Accepts input_ids and attention_mask (tokenized text).
+    |     """
+    |     def __init__(self, vocab_size: int=1000, d_model: int=256, nhead: int=8,
+    |         num_layers: int=4, dim_feedforward: int=512, max_length: int=64,
+    |         num_classes: int=3, dropout: float=0.1) ->None:
+    |         super().__init__()
+    |         self.d_model = d_model
+    |         self.embedding = nn.Embedding(vocab_size, d_model, padding_idx=0)
+    |         self.pos_embedding = nn.Parameter(torch.randn(1, max_length,
+    |             d_model) * 0.02)
+    |         encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=
+    |             nhead, dim_feedforward=dim_feedforward, dropout=dropout,
+    |             batch_first=True, norm_first=True)
+    |         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=
+    |             num_layers)
+    |         self.classifier = nn.Sequential(nn.Linear(d_model, d_model), nn.
+    |             GELU(), nn.Dropout(dropout), nn.Linear(d_model, num_classes))
+    |     def forward(self, input_ids: torch.Tensor, attention_mask: Optional[
+    |         torch.Tensor]=None) ->torch.Tensor:
+    |         batch_size, seq_len = input_ids.shape
+    |         x = self.embedding(input_ids) * math.sqrt(self.d_model)
+    |         x = x + self.pos_embedding[:, :seq_len, :]
+    |         src_key_padding_mask = None
+    |         if attention_mask is not None:
+    |             src_key_padding_mask = attention_mask == 0
+    |         encoded = self.transformer(x, src_key_padding_mask=src_key_padding_mask
+    |             )
+    |         if attention_mask is not None:
+    |             expanded = attention_mask.unsqueeze(-1).float()
+    |             pooled = (encoded * expanded).sum(dim=1) / expanded.sum(dim=1
+    |                 ).clamp(min=1)
+    |         else:
+    |             pooled = encoded[:, 0, :]
+    |         logits = self.classifier(pooled)
+    |         return logits
+
+-- text_transformer.TextTransformer.__init__ --
+  NodeID: 50
+  Key: text_transformer.TextTransformer.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:26-44
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.randn, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout
+  Code:
+    | super().__init__()
+    | self.d_model = d_model
+    | self.embedding = nn.Embedding(vocab_size, d_model, padding_idx=0)
+    | self.pos_embedding = nn.Parameter(torch.randn(1, max_length, d_model) * 0.02)
+    | encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead,
+    |     dim_feedforward=dim_feedforward, dropout=dropout, batch_first=True,
+    |     norm_first=True)
+    | self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+    | self.classifier = nn.Sequential(nn.Linear(d_model, d_model), nn.GELU(), nn.
+    |     Dropout(dropout), nn.Linear(d_model, num_classes))
+
+-- text_transformer.TextTransformer.forward --
+  NodeID: 51
+  Key: text_transformer.TextTransformer.forward.Block9 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:51-56
+  Successors: [text_transformer.TextTransformer.forward.Block10, text_transformer.TextTransformer.forward.Block11]
+  TorchBoundaryCalls: (none)
+  Code:
+    | batch_size, seq_len = input_ids.shape
+    | x = self.embedding(input_ids) * math.sqrt(self.d_model)
+    | x = x + self.pos_embedding[:, :seq_len, :]
+    | src_key_padding_mask = None
+    | if attention_mask is not None:
+    |     src_key_padding_mask = attention_mask == 0
+
+  NodeID: 52
+  Key: text_transformer.TextTransformer.forward.Block10 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:56-56
+  Successors: [text_transformer.TextTransformer.forward.Block11]
+  TorchBoundaryCalls: (none)
+  Code:
+    | src_key_padding_mask = attention_mask == 0
+
+  NodeID: 53
+  Key: text_transformer.TextTransformer.forward.Block11 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:57-62
+  Successors: [text_transformer.TextTransformer.forward.Block12, text_transformer.TextTransformer.forward.Block14]
+  TorchBoundaryCalls: (none)
+  Code:
+    | encoded = self.transformer(x, src_key_padding_mask=src_key_padding_mask)
+    | if attention_mask is not None:
+    |     expanded = attention_mask.unsqueeze(-1).float()
+    |     pooled = (encoded * expanded).sum(dim=1) / expanded.sum(dim=1).clamp(min=1)
+    | else:
+    |     pooled = encoded[:, 0, :]
+
+  NodeID: 54
+  Key: text_transformer.TextTransformer.forward.Block12 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:59-60
+  Successors: [text_transformer.TextTransformer.forward.Block13]
+  TorchBoundaryCalls: (none)
+  Code:
+    | expanded = attention_mask.unsqueeze(-1).float()
+    | pooled = (encoded * expanded).sum(dim=1) / expanded.sum(dim=1).clamp(min=1)
+
+  NodeID: 55
+  Key: text_transformer.TextTransformer.forward.Block13 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:63-64
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | logits = self.classifier(pooled)
+    | return logits
+
+  NodeID: 56
+  Key: text_transformer.TextTransformer.forward.Block14 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:62-62
+  Successors: [text_transformer.TextTransformer.forward.Block13]
+  TorchBoundaryCalls: (none)
+  Code:
+    | pooled = encoded[:, 0, :]
+
+-- train --
+  NodeID: 57
+  Key: train.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:1-4
+  Successors: [train.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """
+    | Complex PyTorch training pipeline.
+    | Includes: DataLoader, text transformer, Stable Diffusion, ViT classifier.
+    | """
+
+  NodeID: 58
+  Key: train.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:5-169
+  Successors: [train.Block41]
+  TorchBoundaryCalls: torch.device, torch.cuda.is_available, torch.stack, torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss, torch.nn.utils.clip_grad_norm_, torch.randn_like, torch.nn.functional.mse_loss, torch.randint, torch.manual_seed
+  Code:
+    | import random
+    | from typing import Dict, Optional
+    | import torch
+    | from torch import nn
+    | from torch.utils.data import DataLoader
+    | from toy_transformer_pkg.data import ImageDataset, TextDataset
+    | from toy_transformer_pkg.models import StableDiffusionPipeline, TextTransformer, ViTClassifier
+    | def get_device() ->torch.device:
+    |     return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    | def collate_text(batch: list) ->Dict[str, torch.Tensor]:
+    |     """Collate text batch."""
+    |     input_ids = torch.stack([b['input_ids'] for b in batch])
+    |     attention_mask = torch.stack([b['attention_mask'] for b in batch])
+    |     labels = torch.stack([b['labels'] for b in batch])
+    |     return {'input_ids': input_ids, 'attention_mask': attention_mask,
+    |         'labels': labels}
+    | def train_text_transformer(device: torch.device, num_epochs: int=2,
+    |     batch_size: int=16, lr: float=0.0001) ->None:
+    |     """Train text transformer with DataLoader."""
+    |     dataset = TextDataset(num_samples=256, max_length=64, vocab_size=1000)
+    |     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |         collate_fn=collate_text, num_workers=0)
+    |     model = TextTransformer(vocab_size=1000, max_length=64, num_classes=3,
+    |         d_model=128, num_layers=2)
+    |     model.to(device)
+    |     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    |     criterion = nn.CrossEntropyLoss()
+    |     model.train()
+    |     for epoch in range(num_epochs):
+    |         total_loss = 0.0
+    |         for batch in dataloader:
+    |             input_ids = batch['input_ids'].to(device)
+    |             attention_mask = batch['attention_mask'].to(device)
+    |             labels = batch['labels'].to(device)
+    |             optimizer.zero_grad()
+    |             logits = model(input_ids=input_ids, attention_mask=attention_mask)
+    |             loss = criterion(logits, labels)
+    |             loss.backward()
+    |             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |             optimizer.step()
+    |             total_loss += loss.item()
+    |         print(
+    |             f'[TextTransformer] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |             )
+    | def train_stable_diffusion(device: torch.device, num_epochs: int=1,
+    |     batch_size: int=4, lr: float=0.0001) ->None:
+    |     """Train Stable Diffusion (VAE + UNet) on synthetic images."""
+    |     dataset = ImageDataset(num_samples=64, image_size=64, num_channels=3,
+    |         num_classes=1)
+    |     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |         num_workers=0)
+    |     pipeline = StableDiffusionPipeline()
+    |     pipeline.to(device)
+    |     optimizer = torch.optim.AdamW(pipeline.parameters(), lr=lr)
+    |     pipeline.train()
+    |     for epoch in range(num_epochs):
+    |         total_loss = 0.0
+    |         for images, _ in dataloader:
+    |             images = images.to(device)
+    |             latents = pipeline.encode_image(images)
+    |             noise = torch.randn_like(latents, device=device)
+    |             timesteps = torch.randint(0, 1000, (images.size(0),), device=device
+    |                 ).long()
+    |             noisy = latents + 0.1 * noise
+    |             optimizer.zero_grad()
+    |             pred = pipeline.unet(noisy, timestep=timesteps)
+    |             loss = nn.functional.mse_loss(pred, noise)
+    |             loss.backward()
+    |             optimizer.step()
+    |             total_loss += loss.item()
+    |         print(
+    |             f'[StableDiffusion] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |             )
+    | def train_vit_classifier(device: torch.device, num_epochs: int=2,
+    |     batch_size: int=8, lr: float=0.0001) ->None:
+    |     """Train ViT classifier on synthetic images."""
+    |     dataset = ImageDataset(num_samples=128, image_size=224, num_channels=3,
+    |         num_classes=10)
+    |     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |         num_workers=0)
+    |     model = ViTClassifier(img_size=224, patch_size=16, embed_dim=192,
+    |         num_heads=3, num_layers=2, num_classes=10)
+    |     model.to(device)
+    |     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    |     criterion = nn.CrossEntropyLoss()
+    |     model.train()
+    |     for epoch in range(num_epochs):
+    |         total_loss = 0.0
+    |         correct = 0
+    |         total = 0
+    |         for images, labels in dataloader:
+    |             images = images.to(device)
+    |             labels = labels.to(device)
+    |             optimizer.zero_grad()
+    |             logits = model(images)
+    |             loss = criterion(logits, labels)
+    |             loss.backward()
+    |             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |             optimizer.step()
+    |             total_loss += loss.item()
+    |             preds = logits.argmax(dim=-1)
+    |             correct += (preds == labels).sum().item()
+    |             total += labels.size(0)
+    |         acc = correct / max(1, total)
+    |         print(
+    |             f'[ViT] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f} acc={acc:.4f}'
+    |             )
+    | def main() ->None:
+    |     torch.manual_seed(42)
+    |     random.seed(42)
+    |     device = get_device()
+    |     print(f'Device: {device}')
+    |     print('\n--- Text Transformer ---')
+    |     train_text_transformer(device)
+    |     print('\n--- Stable Diffusion ---')
+    |     train_stable_diffusion(device)
+    |     print('\n--- ViT Classifier ---')
+    |     train_vit_classifier(device)
+    |     print('\nDone.')
+    | if __name__ == '__main__':
+    |     main()
+
+  NodeID: 59
+  Key: train.Block41 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:169-169
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | main()
+
+-- train.collate_text --
+  NodeID: 60
+  Key: train.collate_text.Block8 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:25-29
+  Successors: []
+  TorchBoundaryCalls: torch.stack
+  Code:
+    | """Collate text batch."""
+    | input_ids = torch.stack([b['input_ids'] for b in batch])
+    | attention_mask = torch.stack([b['attention_mask'] for b in batch])
+    | labels = torch.stack([b['labels'] for b in batch])
+    | return {'input_ids': input_ids, 'attention_mask': attention_mask, 'labels':
+    |     labels}
+
+-- train.get_device --
+  NodeID: 61
+  Key: train.get_device.Block4 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:21-21
+  Successors: []
+  TorchBoundaryCalls: torch.device, torch.cuda.is_available
+  Code:
+    | return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+-- train.main --
+  NodeID: 62
+  Key: train.main.Block39 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:151-165
+  Successors: []
+  TorchBoundaryCalls: torch.manual_seed
+  Code:
+    | torch.manual_seed(42)
+    | random.seed(42)
+    | device = get_device()
+    | print(f'Device: {device}')
+    | print("""
+    | --- Text Transformer ---""")
+    | train_text_transformer(device)
+    | print("""
+    | --- Stable Diffusion ---""")
+    | train_stable_diffusion(device)
+    | print("""
+    | --- ViT Classifier ---""")
+    | train_vit_classifier(device)
+    | print('\nDone.')
+
+-- train.train_stable_diffusion --
+  NodeID: 63
+  Key: train.train_stable_diffusion.Block21 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:76-86
+  Successors: [train.train_stable_diffusion.Block22]
+  TorchBoundaryCalls: torch.utils.data.DataLoader, torch.optim.AdamW
+  Code:
+    | """Train Stable Diffusion (VAE + UNet) on synthetic images."""
+    | dataset = ImageDataset(num_samples=64, image_size=64, num_channels=3,
+    |     num_classes=1)
+    | dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |     num_workers=0)
+    | pipeline = StableDiffusionPipeline()
+    | pipeline.to(device)
+    | optimizer = torch.optim.AdamW(pipeline.parameters(), lr=lr)
+    | pipeline.train()
+
+  NodeID: 64
+  Key: train.train_stable_diffusion.Block22 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:87-101
+  Successors: [train.train_stable_diffusion.Block23]
+  TorchBoundaryCalls: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+  Code:
+    | for epoch in range(num_epochs):
+    |     total_loss = 0.0
+    |     for images, _ in dataloader:
+    |         images = images.to(device)
+    |         latents = pipeline.encode_image(images)
+    |         noise = torch.randn_like(latents, device=device)
+    |         timesteps = torch.randint(0, 1000, (images.size(0),), device=device
+    |             ).long()
+    |         noisy = latents + 0.1 * noise
+    |         optimizer.zero_grad()
+    |         pred = pipeline.unet(noisy, timestep=timesteps)
+    |         loss = nn.functional.mse_loss(pred, noise)
+    |         loss.backward()
+    |         optimizer.step()
+    |         total_loss += loss.item()
+    |     print(
+    |         f'[StableDiffusion] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |         )
+
+  NodeID: 65
+  Key: train.train_stable_diffusion.Block23 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:88-88
+  Successors: [train.train_stable_diffusion.Block25]
+  TorchBoundaryCalls: (none)
+  Code:
+    | total_loss = 0.0
+
+  NodeID: 66
+  Key: train.train_stable_diffusion.Block25 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:89-100
+  Successors: [train.train_stable_diffusion.Block26, train.train_stable_diffusion.Block27]
+  TorchBoundaryCalls: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+  Code:
+    | for images, _ in dataloader:
+    |     images = images.to(device)
+    |     latents = pipeline.encode_image(images)
+    |     noise = torch.randn_like(latents, device=device)
+    |     timesteps = torch.randint(0, 1000, (images.size(0),), device=device).long()
+    |     noisy = latents + 0.1 * noise
+    |     optimizer.zero_grad()
+    |     pred = pipeline.unet(noisy, timestep=timesteps)
+    |     loss = nn.functional.mse_loss(pred, noise)
+    |     loss.backward()
+    |     optimizer.step()
+    |     total_loss += loss.item()
+
+  NodeID: 67
+  Key: train.train_stable_diffusion.Block26 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:90-100
+  Successors: [train.train_stable_diffusion.Block25]
+  TorchBoundaryCalls: torch.randn_like, torch.randint.long, torch.nn.functional.mse_loss, torch.randint
+  Code:
+    | images = images.to(device)
+    | latents = pipeline.encode_image(images)
+    | noise = torch.randn_like(latents, device=device)
+    | timesteps = torch.randint(0, 1000, (images.size(0),), device=device).long()
+    | noisy = latents + 0.1 * noise
+    | optimizer.zero_grad()
+    | pred = pipeline.unet(noisy, timestep=timesteps)
+    | loss = nn.functional.mse_loss(pred, noise)
+    | loss.backward()
+    | optimizer.step()
+    | total_loss += loss.item()
+
+  NodeID: 68
+  Key: train.train_stable_diffusion.Block27 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:101-101
+  Successors: [train.train_stable_diffusion.Block22]
+  TorchBoundaryCalls: (none)
+  Code:
+    | print(
+    |     f'[StableDiffusion] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |     )
+
+-- train.train_text_transformer --
+  NodeID: 69
+  Key: train.train_text_transformer.Block12 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:38-53
+  Successors: [train.train_text_transformer.Block13]
+  TorchBoundaryCalls: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+  Code:
+    | """Train text transformer with DataLoader."""
+    | dataset = TextDataset(num_samples=256, max_length=64, vocab_size=1000)
+    | dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |     collate_fn=collate_text, num_workers=0)
+    | model = TextTransformer(vocab_size=1000, max_length=64, num_classes=3,
+    |     d_model=128, num_layers=2)
+    | model.to(device)
+    | optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    | criterion = nn.CrossEntropyLoss()
+    | model.train()
+
+  NodeID: 70
+  Key: train.train_text_transformer.Block13 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:54-67
+  Successors: [train.train_text_transformer.Block14]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | for epoch in range(num_epochs):
+    |     total_loss = 0.0
+    |     for batch in dataloader:
+    |         input_ids = batch['input_ids'].to(device)
+    |         attention_mask = batch['attention_mask'].to(device)
+    |         labels = batch['labels'].to(device)
+    |         optimizer.zero_grad()
+    |         logits = model(input_ids=input_ids, attention_mask=attention_mask)
+    |         loss = criterion(logits, labels)
+    |         loss.backward()
+    |         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |         optimizer.step()
+    |         total_loss += loss.item()
+    |     print(
+    |         f'[TextTransformer] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |         )
+
+  NodeID: 71
+  Key: train.train_text_transformer.Block14 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:55-55
+  Successors: [train.train_text_transformer.Block16]
+  TorchBoundaryCalls: (none)
+  Code:
+    | total_loss = 0.0
+
+  NodeID: 72
+  Key: train.train_text_transformer.Block16 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:56-66
+  Successors: [train.train_text_transformer.Block17, train.train_text_transformer.Block18]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | for batch in dataloader:
+    |     input_ids = batch['input_ids'].to(device)
+    |     attention_mask = batch['attention_mask'].to(device)
+    |     labels = batch['labels'].to(device)
+    |     optimizer.zero_grad()
+    |     logits = model(input_ids=input_ids, attention_mask=attention_mask)
+    |     loss = criterion(logits, labels)
+    |     loss.backward()
+    |     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |     optimizer.step()
+    |     total_loss += loss.item()
+
+  NodeID: 73
+  Key: train.train_text_transformer.Block17 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:57-66
+  Successors: [train.train_text_transformer.Block16]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | input_ids = batch['input_ids'].to(device)
+    | attention_mask = batch['attention_mask'].to(device)
+    | labels = batch['labels'].to(device)
+    | optimizer.zero_grad()
+    | logits = model(input_ids=input_ids, attention_mask=attention_mask)
+    | loss = criterion(logits, labels)
+    | loss.backward()
+    | torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    | optimizer.step()
+    | total_loss += loss.item()
+
+  NodeID: 74
+  Key: train.train_text_transformer.Block18 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:67-67
+  Successors: [train.train_text_transformer.Block13]
+  TorchBoundaryCalls: (none)
+  Code:
+    | print(
+    |     f'[TextTransformer] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f}'
+    |     )
+
+-- train.train_vit_classifier --
+  NodeID: 75
+  Key: train.train_vit_classifier.Block30 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:110-128
+  Successors: [train.train_vit_classifier.Block31]
+  TorchBoundaryCalls: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+  Code:
+    | """Train ViT classifier on synthetic images."""
+    | dataset = ImageDataset(num_samples=128, image_size=224, num_channels=3,
+    |     num_classes=10)
+    | dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True,
+    |     num_workers=0)
+    | model = ViTClassifier(img_size=224, patch_size=16, embed_dim=192, num_heads
+    |     =3, num_layers=2, num_classes=10)
+    | model.to(device)
+    | optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    | criterion = nn.CrossEntropyLoss()
+    | model.train()
+
+  NodeID: 76
+  Key: train.train_vit_classifier.Block31 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:129-147
+  Successors: [train.train_vit_classifier.Block32]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | for epoch in range(num_epochs):
+    |     total_loss = 0.0
+    |     correct = 0
+    |     total = 0
+    |     for images, labels in dataloader:
+    |         images = images.to(device)
+    |         labels = labels.to(device)
+    |         optimizer.zero_grad()
+    |         logits = model(images)
+    |         loss = criterion(logits, labels)
+    |         loss.backward()
+    |         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |         optimizer.step()
+    |         total_loss += loss.item()
+    |         preds = logits.argmax(dim=-1)
+    |         correct += (preds == labels).sum().item()
+    |         total += labels.size(0)
+    |     acc = correct / max(1, total)
+    |     print(
+    |         f'[ViT] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f} acc={acc:.4f}'
+    |         )
+
+  NodeID: 77
+  Key: train.train_vit_classifier.Block32 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:130-132
+  Successors: [train.train_vit_classifier.Block34]
+  TorchBoundaryCalls: (none)
+  Code:
+    | total_loss = 0.0
+    | correct = 0
+    | total = 0
+
+  NodeID: 78
+  Key: train.train_vit_classifier.Block34 [LOOP] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:133-145
+  Successors: [train.train_vit_classifier.Block35, train.train_vit_classifier.Block36]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | for images, labels in dataloader:
+    |     images = images.to(device)
+    |     labels = labels.to(device)
+    |     optimizer.zero_grad()
+    |     logits = model(images)
+    |     loss = criterion(logits, labels)
+    |     loss.backward()
+    |     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    |     optimizer.step()
+    |     total_loss += loss.item()
+    |     preds = logits.argmax(dim=-1)
+    |     correct += (preds == labels).sum().item()
+    |     total += labels.size(0)
+
+  NodeID: 79
+  Key: train.train_vit_classifier.Block35 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:134-145
+  Successors: [train.train_vit_classifier.Block34]
+  TorchBoundaryCalls: torch.nn.utils.clip_grad_norm_
+  Code:
+    | images = images.to(device)
+    | labels = labels.to(device)
+    | optimizer.zero_grad()
+    | logits = model(images)
+    | loss = criterion(logits, labels)
+    | loss.backward()
+    | torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    | optimizer.step()
+    | total_loss += loss.item()
+    | preds = logits.argmax(dim=-1)
+    | correct += (preds == labels).sum().item()
+    | total += labels.size(0)
+
+  NodeID: 80
+  Key: train.train_vit_classifier.Block36 [BACKEDGE] @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:146-147
+  Successors: [train.train_vit_classifier.Block31]
+  TorchBoundaryCalls: (none)
+  Code:
+    | acc = correct / max(1, total)
+    | print(
+    |     f'[ViT] Epoch {epoch + 1} loss={total_loss / len(dataloader):.4f} acc={acc:.4f}'
+    |     )
+
+-- vit_classifier --
+  NodeID: 81
+  Key: vit_classifier.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:1-1
+  Successors: [vit_classifier.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """Vision Transformer (ViT) for image classification."""
+
+  NodeID: 82
+  Key: vit_classifier.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:2-83
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Conv2d, torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.cat, torch.zeros
+  Code:
+    | from typing import Optional
+    | import torch
+    | from torch import nn
+    | class PatchEmbedding(nn.Module):
+    |     """Split image into patches and embed."""
+    |     def __init__(self, img_size: int=224, patch_size: int=16, in_channels:
+    |         int=3, embed_dim: int=768) ->None:
+    |         super().__init__()
+    |         self.patch_size = patch_size
+    |         self.proj = nn.Conv2d(in_channels, embed_dim, kernel_size=
+    |             patch_size, stride=patch_size)
+    |         self.num_patches = (img_size // patch_size) ** 2
+    |     def forward(self, x: torch.Tensor) ->torch.Tensor:
+    |         x = self.proj(x)
+    |         return x.flatten(2).transpose(1, 2)
+    | class ViTClassifier(nn.Module):
+    |     """
+    |     Vision Transformer for image classification.
+    |     """
+    |     def __init__(self, img_size: int=224, patch_size: int=16, in_channels:
+    |         int=3, embed_dim: int=768, num_heads: int=12, num_layers: int=6,
+    |         mlp_ratio: float=4.0, num_classes: int=10, dropout: float=0.1) ->None:
+    |         super().__init__()
+    |         self.patch_embed = PatchEmbedding(img_size=img_size, patch_size=
+    |             patch_size, in_channels=in_channels, embed_dim=embed_dim)
+    |         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+    |         nn.init.trunc_normal_(self.cls_token, std=0.02)
+    |         num_patches = self.patch_embed.num_patches
+    |         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1,
+    |             embed_dim))
+    |         nn.init.trunc_normal_(self.pos_embed, std=0.02)
+    |         self.dropout = nn.Dropout(dropout)
+    |         d_ff = int(embed_dim * mlp_ratio)
+    |         encoder_layer = nn.TransformerEncoderLayer(d_model=embed_dim, nhead
+    |             =num_heads, dim_feedforward=d_ff, dropout=dropout, batch_first=
+    |             True, norm_first=True)
+    |         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=
+    |             num_layers)
+    |         self.norm = nn.LayerNorm(embed_dim)
+    |         self.head = nn.Linear(embed_dim, num_classes)
+    |     def forward(self, x: torch.Tensor) ->torch.Tensor:
+    |         B = x.size(0)
+    |         x = self.patch_embed(x)
+    |         cls_tokens = self.cls_token.expand(B, -1, -1)
+    |         x = torch.cat([cls_tokens, x], dim=1)
+    |         x = x + self.pos_embed
+    |         x = self.dropout(x)
+    |         x = self.transformer(x)
+    |         x = self.norm(x)
+    |         logits = self.head(x[:, 0])
+    |         return logits
+
+-- vit_classifier.PatchEmbedding.__init__ --
+  NodeID: 83
+  Key: vit_classifier.PatchEmbedding.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:18-23
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Conv2d
+  Code:
+    | super().__init__()
+    | self.patch_size = patch_size
+    | self.proj = nn.Conv2d(in_channels, embed_dim, kernel_size=patch_size,
+    |     stride=patch_size)
+    | self.num_patches = (img_size // patch_size) ** 2
+
+-- vit_classifier.PatchEmbedding.forward --
+  NodeID: 84
+  Key: vit_classifier.PatchEmbedding.forward.Block9 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:26-27
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | x = self.proj(x)
+    | return x.flatten(2).transpose(1, 2)
+
+-- vit_classifier.ViTClassifier.__init__ --
+  NodeID: 85
+  Key: vit_classifier.ViTClassifier.__init__.Block16 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:47-71
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.zeros
+  Code:
+    | super().__init__()
+    | self.patch_embed = PatchEmbedding(img_size=img_size, patch_size=patch_size,
+    |     in_channels=in_channels, embed_dim=embed_dim)
+    | self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+    | nn.init.trunc_normal_(self.cls_token, std=0.02)
+    | num_patches = self.patch_embed.num_patches
+    | self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, embed_dim))
+    | nn.init.trunc_normal_(self.pos_embed, std=0.02)
+    | self.dropout = nn.Dropout(dropout)
+    | d_ff = int(embed_dim * mlp_ratio)
+    | encoder_layer = nn.TransformerEncoderLayer(d_model=embed_dim, nhead=
+    |     num_heads, dim_feedforward=d_ff, dropout=dropout, batch_first=True,
+    |     norm_first=True)
+    | self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+    | self.norm = nn.LayerNorm(embed_dim)
+    | self.head = nn.Linear(embed_dim, num_classes)
+
+-- vit_classifier.ViTClassifier.forward --
+  NodeID: 86
+  Key: vit_classifier.ViTClassifier.forward.Block19 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:74-83
+  Successors: []
+  TorchBoundaryCalls: torch.cat
+  Code:
+    | B = x.size(0)
+    | x = self.patch_embed(x)
+    | cls_tokens = self.cls_token.expand(B, -1, -1)
+    | x = torch.cat([cls_tokens, x], dim=1)
+    | x = x + self.pos_embed
+    | x = self.dropout(x)
+    | x = self.transformer(x)
+    | x = self.norm(x)
+    | logits = self.head(x[:, 0])
+    | return logits
+
+
+=== CFG EDGES (method.BlockId) ===
+
+__init__.Block1 -> __init__.Block2
+image_dataset.Block1 -> image_dataset.Block2
+stable_diffusion.Block1 -> stable_diffusion.Block2
+stable_diffusion.SDAutoencoderKL.__init__.Block31 -> stable_diffusion.SDAutoencoderKL.__init__.Block32
+stable_diffusion.SDAutoencoderKL.__init__.Block32 -> stable_diffusion.SDAutoencoderKL.__init__.Block33
+stable_diffusion.SDAutoencoderKL.__init__.Block32 -> stable_diffusion.SDAutoencoderKL.__init__.Block34
+stable_diffusion.SDAutoencoderKL.__init__.Block33 -> stable_diffusion.SDAutoencoderKL.__init__.Block32
+stable_diffusion.SDAutoencoderKL.__init__.Block34 -> stable_diffusion.SDAutoencoderKL.__init__.Block35
+stable_diffusion.SDAutoencoderKL.__init__.Block35 -> stable_diffusion.SDAutoencoderKL.__init__.Block36
+stable_diffusion.SDAutoencoderKL.__init__.Block35 -> stable_diffusion.SDAutoencoderKL.__init__.Block37
+stable_diffusion.SDAutoencoderKL.__init__.Block36 -> stable_diffusion.SDAutoencoderKL.__init__.Block35
+stable_diffusion.StableDiffusionPipeline.forward.Block62 -> stable_diffusion.StableDiffusionPipeline.forward.Block63
+stable_diffusion.StableDiffusionPipeline.forward.Block62 -> stable_diffusion.StableDiffusionPipeline.forward.Block64
+stable_diffusion.StableDiffusionPipeline.forward.Block63 -> stable_diffusion.StableDiffusionPipeline.forward.Block64
+stable_diffusion.StableDiffusionUNet.__init__.Block16 -> stable_diffusion.StableDiffusionUNet.__init__.Block17
+stable_diffusion.StableDiffusionUNet.__init__.Block17 -> stable_diffusion.StableDiffusionUNet.__init__.Block18
+stable_diffusion.StableDiffusionUNet.__init__.Block17 -> stable_diffusion.StableDiffusionUNet.__init__.Block19
+stable_diffusion.StableDiffusionUNet.__init__.Block18 -> stable_diffusion.StableDiffusionUNet.__init__.Block17
+stable_diffusion.StableDiffusionUNet.forward.Block22 -> stable_diffusion.StableDiffusionUNet.forward.Block23
+stable_diffusion.StableDiffusionUNet.forward.Block22 -> stable_diffusion.StableDiffusionUNet.forward.Block24
+stable_diffusion.StableDiffusionUNet.forward.Block23 -> stable_diffusion.StableDiffusionUNet.forward.Block22
+text_dataset.Block1 -> text_dataset.Block2
+text_dataset.TextDataset.__init__.Block6 -> text_dataset.TextDataset.__init__.Block7
+text_dataset.TextDataset.__init__.Block7 -> text_dataset.TextDataset.__init__.Block8
+text_dataset.TextDataset.__init__.Block8 -> text_dataset.TextDataset.__init__.Block7
+text_dataset.TextDataset._make_example.Block12 -> text_dataset.TextDataset._make_example.Block13
+text_dataset.TextDataset._make_example.Block12 -> text_dataset.TextDataset._make_example.Block14
+text_dataset.TextDataset._make_example.Block13 -> text_dataset.TextDataset._make_example.Block14
+text_transformer.Block1 -> text_transformer.Block2
+text_transformer.TextTransformer.forward.Block10 -> text_transformer.TextTransformer.forward.Block11
+text_transformer.TextTransformer.forward.Block11 -> text_transformer.TextTransformer.forward.Block12
+text_transformer.TextTransformer.forward.Block11 -> text_transformer.TextTransformer.forward.Block14
+text_transformer.TextTransformer.forward.Block12 -> text_transformer.TextTransformer.forward.Block13
+text_transformer.TextTransformer.forward.Block14 -> text_transformer.TextTransformer.forward.Block13
+text_transformer.TextTransformer.forward.Block9 -> text_transformer.TextTransformer.forward.Block10
+text_transformer.TextTransformer.forward.Block9 -> text_transformer.TextTransformer.forward.Block11
+train.Block1 -> train.Block2
+train.Block2 -> train.Block41
+train.train_stable_diffusion.Block21 -> train.train_stable_diffusion.Block22
+train.train_stable_diffusion.Block22 -> train.train_stable_diffusion.Block23
+train.train_stable_diffusion.Block23 -> train.train_stable_diffusion.Block25
+train.train_stable_diffusion.Block25 -> train.train_stable_diffusion.Block26
+train.train_stable_diffusion.Block25 -> train.train_stable_diffusion.Block27
+train.train_stable_diffusion.Block26 -> train.train_stable_diffusion.Block25
+train.train_stable_diffusion.Block27 -> train.train_stable_diffusion.Block22
+train.train_text_transformer.Block12 -> train.train_text_transformer.Block13
+train.train_text_transformer.Block13 -> train.train_text_transformer.Block14
+train.train_text_transformer.Block14 -> train.train_text_transformer.Block16
+train.train_text_transformer.Block16 -> train.train_text_transformer.Block17
+train.train_text_transformer.Block16 -> train.train_text_transformer.Block18
+train.train_text_transformer.Block17 -> train.train_text_transformer.Block16
+train.train_text_transformer.Block18 -> train.train_text_transformer.Block13
+train.train_vit_classifier.Block30 -> train.train_vit_classifier.Block31
+train.train_vit_classifier.Block31 -> train.train_vit_classifier.Block32
+train.train_vit_classifier.Block32 -> train.train_vit_classifier.Block34
+train.train_vit_classifier.Block34 -> train.train_vit_classifier.Block35
+train.train_vit_classifier.Block34 -> train.train_vit_classifier.Block36
+train.train_vit_classifier.Block35 -> train.train_vit_classifier.Block34
+train.train_vit_classifier.Block36 -> train.train_vit_classifier.Block31
+vit_classifier.Block1 -> vit_classifier.Block2
+
+=== CALL EDGES (caller => callee_entry) ===
+
+image_dataset.Block2 => image_dataset.ImageDataset._make_example.Block9
+image_dataset.ImageDataset.__init__.Block6 => image_dataset.ImageDataset._make_example.Block9
+model.Block1 => __init__.Block1
+model.ToyTransformerClassifier.__init__.Block5 => __init__.Block1
+stable_diffusion.Block2 => __init__.Block1
+stable_diffusion.Block2 => stable_diffusion.SDAutoencoderKL.__init__.Block31
+stable_diffusion.Block2 => stable_diffusion.SDAutoencoderKL.decode.Block44
+stable_diffusion.Block2 => stable_diffusion.SDAutoencoderKL.encode.Block40
+stable_diffusion.Block2 => stable_diffusion.SDUNetBlock.__init__.Block6
+stable_diffusion.Block2 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+stable_diffusion.Block2 => stable_diffusion.StableDiffusionUNet.__init__.Block16
+stable_diffusion.SDAutoencoderKL.__init__.Block31 => __init__.Block1
+stable_diffusion.SDUNetBlock.__init__.Block6 => __init__.Block1
+stable_diffusion.StableDiffusionPipeline.__init__.Block51 => __init__.Block1
+stable_diffusion.StableDiffusionPipeline.__init__.Block51 => stable_diffusion.SDAutoencoderKL.__init__.Block31
+stable_diffusion.StableDiffusionPipeline.__init__.Block51 => stable_diffusion.StableDiffusionUNet.__init__.Block16
+stable_diffusion.StableDiffusionPipeline.decode_latent.Block58 => stable_diffusion.SDAutoencoderKL.decode.Block44
+stable_diffusion.StableDiffusionPipeline.encode_image.Block54 => stable_diffusion.SDAutoencoderKL.encode.Block40
+stable_diffusion.StableDiffusionPipeline.forward.Block62 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+stable_diffusion.StableDiffusionUNet.__init__.Block16 => __init__.Block1
+stable_diffusion.StableDiffusionUNet.__init__.Block17 => stable_diffusion.SDUNetBlock.__init__.Block6
+stable_diffusion.StableDiffusionUNet.__init__.Block18 => stable_diffusion.SDUNetBlock.__init__.Block6
+text_dataset.Block2 => text_dataset.TextDataset._make_example.Block12
+text_dataset.TextDataset.__init__.Block7 => text_dataset.TextDataset._make_example.Block12
+text_dataset.TextDataset.__init__.Block8 => text_dataset.TextDataset._make_example.Block12
+text_transformer.Block2 => __init__.Block1
+text_transformer.TextTransformer.__init__.Block6 => __init__.Block1
+train.Block2 => image_dataset.ImageDataset.__init__.Block6
+train.Block2 => model.Block1
+train.Block2 => stable_diffusion.StableDiffusionPipeline.__init__.Block51
+train.Block2 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+train.Block2 => text_dataset.TextDataset.__init__.Block6
+train.Block2 => text_transformer.TextTransformer.__init__.Block6
+train.Block2 => train.Block1
+train.Block2 => train.get_device.Block4
+train.Block2 => train.main.Block39
+train.Block2 => train.train_stable_diffusion.Block21
+train.Block2 => train.train_text_transformer.Block12
+train.Block2 => train.train_vit_classifier.Block30
+train.Block2 => vit_classifier.ViTClassifier.__init__.Block16
+train.Block41 => train.main.Block39
+train.main.Block39 => train.get_device.Block4
+train.main.Block39 => train.train_stable_diffusion.Block21
+train.main.Block39 => train.train_text_transformer.Block12
+train.main.Block39 => train.train_vit_classifier.Block30
+train.train_stable_diffusion.Block21 => image_dataset.ImageDataset.__init__.Block6
+train.train_stable_diffusion.Block21 => stable_diffusion.StableDiffusionPipeline.__init__.Block51
+train.train_stable_diffusion.Block21 => train.Block1
+train.train_stable_diffusion.Block22 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+train.train_stable_diffusion.Block25 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+train.train_stable_diffusion.Block26 => stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+train.train_text_transformer.Block12 => text_dataset.TextDataset.__init__.Block6
+train.train_text_transformer.Block12 => text_transformer.TextTransformer.__init__.Block6
+train.train_text_transformer.Block12 => train.Block1
+train.train_text_transformer.Block13 => model.Block1
+train.train_text_transformer.Block16 => model.Block1
+train.train_text_transformer.Block17 => model.Block1
+train.train_vit_classifier.Block30 => image_dataset.ImageDataset.__init__.Block6
+train.train_vit_classifier.Block30 => train.Block1
+train.train_vit_classifier.Block30 => vit_classifier.ViTClassifier.__init__.Block16
+train.train_vit_classifier.Block31 => model.Block1
+train.train_vit_classifier.Block34 => model.Block1
+train.train_vit_classifier.Block35 => model.Block1
+vit_classifier.Block2 => __init__.Block1
+vit_classifier.Block2 => vit_classifier.PatchEmbedding.__init__.Block6
+vit_classifier.PatchEmbedding.__init__.Block6 => __init__.Block1
+vit_classifier.ViTClassifier.__init__.Block16 => __init__.Block1
+vit_classifier.ViTClassifier.__init__.Block16 => vit_classifier.PatchEmbedding.__init__.Block6
+
+=== PATHS: ENTRY -> TORCH BOUNDARY (ALL) ===
+
+Path 1:
+  train.main.Block39  <-- TORCH: torch.manual_seed
+
+Path 2:
+  train.main.Block39
+  train.get_device.Block4  <-- TORCH: torch.device, torch.cuda.is_available
+
+Path 3:
+  train.main.Block39
+  train.train_text_transformer.Block12  <-- TORCH: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+
+Path 4:
+  train.main.Block39
+  train.train_stable_diffusion.Block21  <-- TORCH: torch.utils.data.DataLoader, torch.optim.AdamW
+
+Path 5:
+  train.main.Block39
+  train.train_vit_classifier.Block30  <-- TORCH: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+
+Path 6:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 7:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  text_transformer.TextTransformer.__init__.Block6  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.randn, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout
+
+Path 8:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]  <-- TORCH: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+
+Path 9:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 10:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  vit_classifier.ViTClassifier.__init__.Block16  <-- TORCH: torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.zeros
+
+Path 11:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 12:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2  <-- TORCH: torch.device, torch.cuda.is_available, torch.stack, torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss, torch.nn.utils.clip_grad_norm_, torch.randn_like, torch.nn.functional.mse_loss, torch.randint, torch.manual_seed
+
+Path 13:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  image_dataset.ImageDataset.__init__.Block6
+  image_dataset.ImageDataset._make_example.Block9  <-- TORCH: torch.randn.float, torch.randn
+
+Path 14:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16  <-- TORCH: torch.nn.ModuleList
+
+Path 15:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 16:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  vit_classifier.ViTClassifier.__init__.Block16
+  vit_classifier.PatchEmbedding.__init__.Block6  <-- TORCH: torch.nn.Conv2d
+
+Path 17:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]
+  train.train_text_transformer.Block14
+  train.train_text_transformer.Block16 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 18:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  text_transformer.TextTransformer.__init__.Block6  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.randn, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout
+
+Path 19:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30  <-- TORCH: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+
+Path 20:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  vit_classifier.ViTClassifier.__init__.Block16  <-- TORCH: torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.zeros
+
+Path 21:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21  <-- TORCH: torch.utils.data.DataLoader, torch.optim.AdamW
+
+Path 22:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 23:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.get_device.Block4  <-- TORCH: torch.device, torch.cuda.is_available
+
+Path 24:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset._make_example.Block12  <-- TORCH: torch.tensor, torch.ones, torch.nn.functional.pad
+
+Path 25:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]
+  train.train_stable_diffusion.Block23
+  train.train_stable_diffusion.Block25 [LOOP]  <-- TORCH: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+
+Path 26:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 27:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 28:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]
+  train.train_text_transformer.Block14
+  train.train_text_transformer.Block16 [LOOP]
+  train.train_text_transformer.Block17 [BACKEDGE]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 29:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]
+  train.train_text_transformer.Block14
+  train.train_text_transformer.Block16 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 30:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  image_dataset.ImageDataset.__init__.Block6
+  image_dataset.ImageDataset._make_example.Block9  <-- TORCH: torch.randn.float, torch.randn
+
+Path 31:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 32:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  vit_classifier.ViTClassifier.__init__.Block16  <-- TORCH: torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.zeros
+
+Path 33:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  vit_classifier.ViTClassifier.__init__.Block16
+  vit_classifier.PatchEmbedding.__init__.Block6  <-- TORCH: torch.nn.Conv2d
+
+Path 34:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]  <-- TORCH: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+
+Path 35:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16  <-- TORCH: torch.nn.ModuleList
+
+Path 36:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+  text_dataset.TextDataset._make_example.Block12  <-- TORCH: torch.tensor, torch.ones, torch.nn.functional.pad
+
+Path 37:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset._make_example.Block12
+  text_dataset.TextDataset._make_example.Block13  <-- TORCH: torch.nn.functional.pad
+
+Path 38:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]
+  train.train_stable_diffusion.Block23
+  train.train_stable_diffusion.Block25 [LOOP]
+  train.train_stable_diffusion.Block26 [BACKEDGE]  <-- TORCH: torch.randn_like, torch.randint.long, torch.nn.functional.mse_loss, torch.randint
+
+Path 39:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block19  <-- TORCH: torch.nn.Conv2d
+
+Path 40:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 41:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block33 [BACKEDGE]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 42:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+Path 43:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  train.train_vit_classifier.Block35 [BACKEDGE]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 44:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 45:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.train_text_transformer.Block13 [LOOP]
+  train.train_text_transformer.Block14
+  train.train_text_transformer.Block16 [LOOP]
+  train.train_text_transformer.Block17 [BACKEDGE]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 46:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 47:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  image_dataset.ImageDataset.__init__.Block6
+  image_dataset.ImageDataset._make_example.Block9  <-- TORCH: torch.randn.float, torch.randn
+
+Path 48:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  vit_classifier.ViTClassifier.__init__.Block16
+  vit_classifier.PatchEmbedding.__init__.Block6  <-- TORCH: torch.nn.Conv2d
+
+Path 49:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16  <-- TORCH: torch.nn.ModuleList
+
+Path 50:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset._make_example.Block12  <-- TORCH: torch.tensor, torch.ones, torch.nn.functional.pad
+
+Path 51:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 52:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+  text_dataset.TextDataset._make_example.Block12
+  text_dataset.TextDataset._make_example.Block13  <-- TORCH: torch.nn.functional.pad
+
+Path 53:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 54:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 55:
+  train.main.Block39
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  train.train_vit_classifier.Block35 [BACKEDGE]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 56:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 57:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]
+  train.train_stable_diffusion.Block23
+  train.train_stable_diffusion.Block25 [LOOP]  <-- TORCH: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+
+Path 58:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 59:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+  text_dataset.TextDataset._make_example.Block12  <-- TORCH: torch.tensor, torch.ones, torch.nn.functional.pad
+
+Path 60:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset._make_example.Block12
+  text_dataset.TextDataset._make_example.Block13  <-- TORCH: torch.nn.functional.pad
+
+Path 61:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block19  <-- TORCH: torch.nn.Conv2d
+
+Path 62:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 63:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block33 [BACKEDGE]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 64:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+Path 65:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block36 [BACKEDGE]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 66:
+  train.main.Block39
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block37  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+Path 67:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  train.train_vit_classifier.Block35 [BACKEDGE]  <-- TORCH: torch.nn.utils.clip_grad_norm_
+
+Path 68:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 69:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  train.train_stable_diffusion.Block22 [LOOP]
+  train.train_stable_diffusion.Block23
+  train.train_stable_diffusion.Block25 [LOOP]
+  train.train_stable_diffusion.Block26 [BACKEDGE]  <-- TORCH: torch.randn_like, torch.randint.long, torch.nn.functional.mse_loss, torch.randint
+
+Path 70:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block19  <-- TORCH: torch.nn.Conv2d
+
+Path 71:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 72:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block33 [BACKEDGE]  <-- TORCH: torch.nn.Conv2d, torch.nn.SiLU
+
+Path 73:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+Path 74:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  text_dataset.TextDataset.__init__.Block6
+  text_dataset.TextDataset.__init__.Block7 [LOOP]
+  text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+  text_dataset.TextDataset._make_example.Block12
+  text_dataset.TextDataset._make_example.Block13  <-- TORCH: torch.nn.functional.pad
+
+Path 75:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 76:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 77:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_vit_classifier.Block30
+  train.train_vit_classifier.Block31 [LOOP]
+  train.train_vit_classifier.Block32
+  train.train_vit_classifier.Block34 [LOOP]
+  train.train_vit_classifier.Block35 [BACKEDGE]
+  model.Block1  <-- TORCH: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+
+Path 78:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.StableDiffusionUNet.__init__.Block16
+  stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+  stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+  stable_diffusion.SDUNetBlock.__init__.Block6  <-- TORCH: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+
+Path 79:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 80:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block36 [BACKEDGE]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 81:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block37  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+Path 82:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block36 [BACKEDGE]  <-- TORCH: torch.nn.ConvTranspose2d, torch.nn.SiLU
+
+Path 83:
+  train.main.Block39
+  train.train_text_transformer.Block12
+  train.Block1
+  train.Block2
+  train.train_stable_diffusion.Block21
+  stable_diffusion.StableDiffusionPipeline.__init__.Block51
+  stable_diffusion.SDAutoencoderKL.__init__.Block31
+  stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block34
+  stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+  stable_diffusion.SDAutoencoderKL.__init__.Block37  <-- TORCH: torch.nn.Sequential, torch.nn.Conv2d
+
+
+=== PATHS: TORCH BOUNDARY -> OUT (forward) ===
+
+
+-- START TORCH BOUNDARY: image_dataset.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:2-42 --
+   TorchCalls: torch.randn
+  PathOut 1:
+    image_dataset.Block2
+    image_dataset.ImageDataset._make_example.Block9
+
+-- START TORCH BOUNDARY: image_dataset.ImageDataset._make_example.Block9 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/image_dataset.py:31-36 --
+   TorchCalls: torch.randn.float, torch.randn
+  PathOut 1:
+    image_dataset.ImageDataset._make_example.Block9
+
+-- START TORCH BOUNDARY: model.Block1 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/model.py:1-42 --
+   TorchCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+  PathOut 1:
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: model.ToyTransformerClassifier.__init__.Block5 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/model.py:16-30 --
+   TorchCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Linear, torch.zeros
+  PathOut 1:
+    model.ToyTransformerClassifier.__init__.Block5
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: stable_diffusion.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:5-121 --
+   TorchCalls: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU, torch.nn.ModuleList, torch.nn.Sequential, torch.nn.ConvTranspose2d, torch.zeros
+  PathOut 1:
+    stable_diffusion.Block2
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 2:
+    stable_diffusion.Block2
+    stable_diffusion.SDAutoencoderKL.decode.Block44
+  PathOut 3:
+    stable_diffusion.Block2
+    __init__.Block1
+    __init__.Block2
+  PathOut 4:
+    stable_diffusion.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 5:
+    stable_diffusion.Block2
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 6:
+    stable_diffusion.Block2
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 7:
+    stable_diffusion.Block2
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 8:
+    stable_diffusion.Block2
+    stable_diffusion.SDAutoencoderKL.__init__.Block31
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+  PathOut 9:
+    stable_diffusion.Block2
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block32 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:75-78 --
+   TorchCalls: torch.nn.Conv2d, torch.nn.SiLU
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block33 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:76-78 --
+   TorchCalls: torch.nn.Conv2d, torch.nn.SiLU
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block33 [BACKEDGE]
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block34 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:79-81 --
+   TorchCalls: torch.nn.Sequential, torch.nn.Conv2d
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block35 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:82-85 --
+   TorchCalls: torch.nn.ConvTranspose2d, torch.nn.SiLU
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block36 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:83-85 --
+   TorchCalls: torch.nn.ConvTranspose2d, torch.nn.SiLU
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block36 [BACKEDGE]
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDAutoencoderKL.__init__.Block37 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:86-86 --
+   TorchCalls: torch.nn.Sequential, torch.nn.Conv2d
+  PathOut 1:
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+
+-- START TORCH BOUNDARY: stable_diffusion.SDUNetBlock.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:15-19 --
+   TorchCalls: torch.nn.Conv2d, torch.nn.GroupNorm, torch.nn.SiLU
+  PathOut 1:
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: stable_diffusion.StableDiffusionPipeline.forward.Block62 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:117-119 --
+   TorchCalls: torch.zeros
+  PathOut 1:
+    stable_diffusion.StableDiffusionPipeline.forward.Block62
+    stable_diffusion.StableDiffusionPipeline.forward.Block64
+  PathOut 2:
+    stable_diffusion.StableDiffusionPipeline.forward.Block62
+    stable_diffusion.StableDiffusionPipeline.forward.Block63
+    stable_diffusion.StableDiffusionPipeline.forward.Block64
+  PathOut 3:
+    stable_diffusion.StableDiffusionPipeline.forward.Block62
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+
+-- START TORCH BOUNDARY: stable_diffusion.StableDiffusionPipeline.forward.Block63 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:119-119 --
+   TorchCalls: torch.zeros
+  PathOut 1:
+    stable_diffusion.StableDiffusionPipeline.forward.Block63
+    stable_diffusion.StableDiffusionPipeline.forward.Block64
+
+-- START TORCH BOUNDARY: stable_diffusion.StableDiffusionUNet.__init__.Block16 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:41-43 --
+   TorchCalls: torch.nn.ModuleList
+  PathOut 1:
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 2:
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 4:
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: stable_diffusion.StableDiffusionUNet.__init__.Block19 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/stable_diffusion.py:47-47 --
+   TorchCalls: torch.nn.Conv2d
+  PathOut 1:
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+
+-- START TORCH BOUNDARY: text_dataset.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:2-56 --
+   TorchCalls: torch.tensor, torch.ones, torch.nn.functional.pad
+  PathOut 1:
+    text_dataset.Block2
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 2:
+    text_dataset.Block2
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+
+-- START TORCH BOUNDARY: text_dataset.TextDataset.__getitem__.Block22 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:51-56 --
+   TorchCalls: torch.tensor
+  PathOut 1:
+    text_dataset.TextDataset.__getitem__.Block22
+
+-- START TORCH BOUNDARY: text_dataset.TextDataset._make_example.Block12 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:30-43 --
+   TorchCalls: torch.tensor, torch.ones, torch.nn.functional.pad
+  PathOut 1:
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 2:
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+
+-- START TORCH BOUNDARY: text_dataset.TextDataset._make_example.Block13 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/data/text_dataset.py:37-43 --
+   TorchCalls: torch.nn.functional.pad
+  PathOut 1:
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+
+-- START TORCH BOUNDARY: text_transformer.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:2-64 --
+   TorchCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout, torch.randn
+  PathOut 1:
+    text_transformer.Block2
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: text_transformer.TextTransformer.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/text_transformer.py:26-44 --
+   TorchCalls: torch.nn.Embedding, torch.nn.Parameter, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.Sequential, torch.randn, torch.nn.Linear, torch.nn.GELU, torch.nn.Dropout
+  PathOut 1:
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:5-169 --
+   TorchCalls: torch.device, torch.cuda.is_available, torch.stack, torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss, torch.nn.utils.clip_grad_norm_, torch.randn_like, torch.nn.functional.mse_loss, torch.randint, torch.manual_seed
+  PathOut 1:
+    train.Block2
+    train.get_device.Block4
+  PathOut 2:
+    train.Block2
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 3:
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 4:
+    train.Block2
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 5:
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 6:
+    train.Block2
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 7:
+    train.Block2
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 8:
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 9:
+    train.Block2
+    train.train_vit_classifier.Block30
+    vit_classifier.ViTClassifier.__init__.Block16
+    __init__.Block1
+    __init__.Block2
+  PathOut 10:
+    train.Block2
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 11:
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 12:
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 13:
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 14:
+    train.Block2
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 15:
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 16:
+    train.Block2
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 17:
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 18:
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 19:
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 20:
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 21:
+    train.Block2
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 22:
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 23:
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 24:
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.SDAutoencoderKL.__init__.Block31
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+  PathOut 25:
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.collate_text.Block8 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:25-29 --
+   TorchCalls: torch.stack
+  PathOut 1:
+    train.collate_text.Block8
+
+-- START TORCH BOUNDARY: train.get_device.Block4 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:21-21 --
+   TorchCalls: torch.device, torch.cuda.is_available
+  PathOut 1:
+    train.get_device.Block4
+
+-- START TORCH BOUNDARY: train.main.Block39 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:151-165 --
+   TorchCalls: torch.manual_seed
+  PathOut 1:
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 2:
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 3:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.get_device.Block4
+  PathOut 4:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 5:
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 6:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 7:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 8:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 9:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 10:
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 11:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 12:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 13:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 14:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 15:
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    train.train_stable_diffusion.Block23
+    train.train_stable_diffusion.Block25 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 16:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 17:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 18:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 19:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 20:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 21:
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.SDAutoencoderKL.__init__.Block31
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+  PathOut 22:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block17 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 23:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 24:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 25:
+    train.main.Block39
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+
+-- START TORCH BOUNDARY: train.train_stable_diffusion.Block21 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:76-86 --
+   TorchCalls: torch.utils.data.DataLoader, torch.optim.AdamW
+  PathOut 1:
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 2:
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 3:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    __init__.Block1
+    __init__.Block2
+  PathOut 4:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.get_device.Block4
+  PathOut 5:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 6:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    __init__.Block1
+    __init__.Block2
+  PathOut 7:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 8:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 9:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 10:
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    train.train_stable_diffusion.Block23
+    train.train_stable_diffusion.Block25 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 11:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 12:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 13:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 14:
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    train.train_stable_diffusion.Block23
+    train.train_stable_diffusion.Block25 [LOOP]
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 15:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 16:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.SDAutoencoderKL.__init__.Block31
+    stable_diffusion.SDAutoencoderKL.__init__.Block32 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block34
+    stable_diffusion.SDAutoencoderKL.__init__.Block35 [LOOP]
+    stable_diffusion.SDAutoencoderKL.__init__.Block37
+  PathOut 17:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 18:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 19:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 20:
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block18 [BACKEDGE]
+    stable_diffusion.SDUNetBlock.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 21:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 22:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 23:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 24:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 25:
+    train.train_stable_diffusion.Block21
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+
+-- START TORCH BOUNDARY: train.train_stable_diffusion.Block22 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:87-101 --
+   TorchCalls: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+  PathOut 1:
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 2:
+    train.train_stable_diffusion.Block22 [LOOP]
+    train.train_stable_diffusion.Block23
+    train.train_stable_diffusion.Block25 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 3:
+    train.train_stable_diffusion.Block22 [LOOP]
+    train.train_stable_diffusion.Block23
+    train.train_stable_diffusion.Block25 [LOOP]
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+
+-- START TORCH BOUNDARY: train.train_stable_diffusion.Block25 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:89-100 --
+   TorchCalls: torch.randn_like, torch.nn.functional.mse_loss, torch.randint
+  PathOut 1:
+    train.train_stable_diffusion.Block25 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 2:
+    train.train_stable_diffusion.Block25 [LOOP]
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 3:
+    train.train_stable_diffusion.Block25 [LOOP]
+    train.train_stable_diffusion.Block27 [BACKEDGE]
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+
+-- START TORCH BOUNDARY: train.train_stable_diffusion.Block26 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:90-100 --
+   TorchCalls: torch.randn_like, torch.randint.long, torch.nn.functional.mse_loss, torch.randint
+  PathOut 1:
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 2:
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    train.train_stable_diffusion.Block25 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 3:
+    train.train_stable_diffusion.Block26 [BACKEDGE]
+    train.train_stable_diffusion.Block25 [LOOP]
+    train.train_stable_diffusion.Block27 [BACKEDGE]
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+
+-- START TORCH BOUNDARY: train.train_text_transformer.Block12 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:38-53 --
+   TorchCalls: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+  PathOut 1:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.get_device.Block4
+  PathOut 2:
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 4:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 5:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 6:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 7:
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 8:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 9:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 10:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 11:
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 12:
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 13:
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 14:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 15:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 16:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 17:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 18:
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 19:
+    train.train_text_transformer.Block12
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block17 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 20:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 21:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 22:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 23:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 24:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 25:
+    train.train_text_transformer.Block12
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+
+-- START TORCH BOUNDARY: train.train_text_transformer.Block13 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:54-67 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_text_transformer.Block13 [LOOP]
+    train.train_text_transformer.Block14
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block17 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.train_text_transformer.Block16 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:56-66 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_text_transformer.Block16 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block17 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block18 [BACKEDGE]
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.train_text_transformer.Block17 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:57-66 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_text_transformer.Block17 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_text_transformer.Block17 [BACKEDGE]
+    train.train_text_transformer.Block16 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_text_transformer.Block17 [BACKEDGE]
+    train.train_text_transformer.Block16 [LOOP]
+    train.train_text_transformer.Block18 [BACKEDGE]
+    train.train_text_transformer.Block13 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.train_vit_classifier.Block30 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:110-128 --
+   TorchCalls: torch.utils.data.DataLoader, torch.optim.AdamW, torch.nn.CrossEntropyLoss
+  PathOut 1:
+    train.train_vit_classifier.Block30
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 2:
+    train.train_vit_classifier.Block30
+    vit_classifier.ViTClassifier.__init__.Block16
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.get_device.Block4
+  PathOut 4:
+    train.train_vit_classifier.Block30
+    train.train_vit_classifier.Block31 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 5:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 6:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 7:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 8:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.get_device.Block4
+  PathOut 9:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 10:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 11:
+    train.train_vit_classifier.Block30
+    train.train_vit_classifier.Block31 [LOOP]
+    train.train_vit_classifier.Block32
+    train.train_vit_classifier.Block34 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 12:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 13:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 14:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 15:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 16:
+    train.train_vit_classifier.Block30
+    train.train_vit_classifier.Block31 [LOOP]
+    train.train_vit_classifier.Block32
+    train.train_vit_classifier.Block34 [LOOP]
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 17:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    image_dataset.ImageDataset.__init__.Block6
+    image_dataset.ImageDataset._make_example.Block9
+  PathOut 18:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 19:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+  PathOut 20:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset.__init__.Block8 [BACKEDGE]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 21:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block13
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 22:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_transformer.TextTransformer.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+  PathOut 23:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.Block41
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    train.train_stable_diffusion.Block22 [LOOP]
+    stable_diffusion.StableDiffusionPipeline.encode_image.Block54
+    stable_diffusion.SDAutoencoderKL.encode.Block40
+  PathOut 24:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_text_transformer.Block12
+    text_dataset.TextDataset.__init__.Block6
+    text_dataset.TextDataset.__init__.Block7 [LOOP]
+    text_dataset.TextDataset._make_example.Block12
+    text_dataset.TextDataset._make_example.Block14
+  PathOut 25:
+    train.train_vit_classifier.Block30
+    train.Block1
+    train.Block2
+    train.main.Block39
+    train.train_stable_diffusion.Block21
+    stable_diffusion.StableDiffusionPipeline.__init__.Block51
+    stable_diffusion.StableDiffusionUNet.__init__.Block16
+    stable_diffusion.StableDiffusionUNet.__init__.Block17 [LOOP]
+    stable_diffusion.StableDiffusionUNet.__init__.Block19
+
+-- START TORCH BOUNDARY: train.train_vit_classifier.Block31 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:129-147 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_vit_classifier.Block31 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_vit_classifier.Block31 [LOOP]
+    train.train_vit_classifier.Block32
+    train.train_vit_classifier.Block34 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_vit_classifier.Block31 [LOOP]
+    train.train_vit_classifier.Block32
+    train.train_vit_classifier.Block34 [LOOP]
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.train_vit_classifier.Block34 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:133-145 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_vit_classifier.Block34 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_vit_classifier.Block34 [LOOP]
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_vit_classifier.Block34 [LOOP]
+    train.train_vit_classifier.Block36 [BACKEDGE]
+    train.train_vit_classifier.Block31 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: train.train_vit_classifier.Block35 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/train.py:134-145 --
+   TorchCalls: torch.nn.utils.clip_grad_norm_
+  PathOut 1:
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    train.train_vit_classifier.Block34 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+  PathOut 3:
+    train.train_vit_classifier.Block35 [BACKEDGE]
+    train.train_vit_classifier.Block34 [LOOP]
+    train.train_vit_classifier.Block36 [BACKEDGE]
+    train.train_vit_classifier.Block31 [LOOP]
+    model.Block1
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: vit_classifier.Block2 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:2-83 --
+   TorchCalls: torch.nn.Conv2d, torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.cat, torch.zeros
+  PathOut 1:
+    vit_classifier.Block2
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    vit_classifier.Block2
+    vit_classifier.PatchEmbedding.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: vit_classifier.PatchEmbedding.__init__.Block6 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:18-23 --
+   TorchCalls: torch.nn.Conv2d
+  PathOut 1:
+    vit_classifier.PatchEmbedding.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: vit_classifier.ViTClassifier.__init__.Block16 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:47-71 --
+   TorchCalls: torch.nn.Parameter, torch.nn.init.trunc_normal_, torch.nn.Dropout, torch.nn.TransformerEncoderLayer, torch.nn.TransformerEncoder, torch.nn.LayerNorm, torch.nn.Linear, torch.zeros
+  PathOut 1:
+    vit_classifier.ViTClassifier.__init__.Block16
+    __init__.Block1
+    __init__.Block2
+  PathOut 2:
+    vit_classifier.ViTClassifier.__init__.Block16
+    vit_classifier.PatchEmbedding.__init__.Block6
+    __init__.Block1
+    __init__.Block2
+
+-- START TORCH BOUNDARY: vit_classifier.ViTClassifier.forward.Block19 @ /home/maihanwe/experiment_combine/toy_transformer_pkg/models/vit_classifier.py:74-83 --
+   TorchCalls: torch.cat
+  PathOut 1:
+    vit_classifier.ViTClassifier.forward.Block19
+
+Saved to: /home/maihanwe/experiment_statementlevel/cfg_torch_paths.txt
