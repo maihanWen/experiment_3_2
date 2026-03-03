@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
 """
-instrument.py (UPDATED v2 - fixes NameError torch + avoids line shifts)
+instrument.py (CALL-SITE INSTRUMENTATION + LOOP PRUNE)
 
-Key fix:
-  - Injects TB markers as:
-        with __import__("torch").profiler.record_function("TB:..."):
-    so it does NOT require `torch` or `record_function` to be imported in the file.
+Fix:
+- If two callsites overlap and one strictly contains another, drop the larger one.
+  This specifically removes loop-header spans (e.g. for-loop node) when inner
+  statements exist, preventing double TB markers for the same loop body.
 
-This avoids:
-  - NameError: record_function is not defined
-  - NameError: torch is not defined
-  - Line-number shifts caused by inserting imports at top
-
-Also:
-  - Copies --src directory to --dst (default: ./instrumented_<src_name>)
-  - Instruments .py files referenced by plan (file + line_start/end)
-  - Writes <dst_root>/run_profile.py automatically to produce trace.json
-
-Usage:
-  python instrument.py --plan torch_boundaries.json --src /path/to/toy_transformer_pkg
-  cd ./instrumented_toy_transformer_pkg
-  python run_profile.py
+Plan format expected:
+[
+  {
+    "kind": "call",
+    "scope": "...",
+    "file": "...",
+    "line_start": 40,
+    "line_end": 54,
+    "call_norm": "torch.randn",
+    "label": "TB:..."
+  },
+  ...
+]
 """
 
 from __future__ import annotations
@@ -30,46 +29,58 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from collections import defaultdict
 
 
 PROFILE_RUNNER_NAME = "run_profile.py"
 
 
 @dataclass(frozen=True)
-class Boundary:
-    block_key: str
+class CallSite:
     file: str
+    scope: str
     line_start: int
     line_end: int
-    torch_calls: list[str]
+    label: str
+    call_norm: str  # used for smarter pruning
 
 
-def _load_plan(plan_path: Path) -> list[Boundary]:
+def _load_plan(plan_path: Path) -> list[CallSite]:
     data = json.loads(plan_path.read_text(encoding="utf-8"))
     if not isinstance(data, list):
         raise ValueError("Plan JSON must be a list of objects.")
-    out: list[Boundary] = []
+
+    out: list[CallSite] = []
     for obj in data:
         if not isinstance(obj, dict):
             continue
+        if obj.get("kind") != "call":
+            continue
+
         f = obj.get("file")
+        scope = obj.get("scope") or ""
         ls = obj.get("line_start")
         le = obj.get("line_end")
-        bk = obj.get("block_key") or obj.get("key") or ""
-        tc = obj.get("torch_calls") or []
-        if not f or not bk or not isinstance(ls, int) or ls <= 0:
+        label = obj.get("label") or ""
+        call_norm = obj.get("call_norm") or ""
+
+        if not f or not isinstance(ls, int) or ls <= 0:
             continue
         if not isinstance(le, int) or le <= 0:
             le = ls
         if le < ls:
             ls, le = le, ls
+        if not label:
+            label = f"TB:{scope}.call.L{ls}"
+
         out.append(
-            Boundary(
-                block_key=str(bk),
+            CallSite(
                 file=str(f),
+                scope=str(scope),
                 line_start=ls,
                 line_end=le,
-                torch_calls=[str(x) for x in tc],
+                label=str(label),
+                call_norm=str(call_norm),
             )
         )
     return out
@@ -82,18 +93,6 @@ def _read_lines(p: Path) -> list[str]:
 def _write_lines(p: Path, lines: list[str]) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def _indent_of(line: str) -> str:
-    return line[: len(line) - len(line.lstrip(" \t"))]
-
-
-def _make_label(b: Boundary) -> str:
-    calls = "|".join(b.torch_calls[:6])
-    if len(b.torch_calls) > 6:
-        calls += "|..."
-    calls = calls.replace("\n", " ").replace("\r", " ")
-    return f"TB:{b.block_key} torch={calls}" if calls else f"TB:{b.block_key}"
 
 
 def _line_indent_len(s: str) -> int:
@@ -110,48 +109,55 @@ def _is_noncode_line(s: str) -> bool:
     return st == "" or st.startswith("#")
 
 
-def _apply_boundaries_to_lines(lines: list[str], boundaries: list[Boundary]) -> list[str]:
-    """
-    Wrap each boundary range (1-based line numbers) with:
+def _dedup_exact(callsites: list[CallSite]) -> list[CallSite]:
+    uniq = {}
+    for c in callsites:
+        uniq[(c.file, c.line_start, c.line_end, c.call_norm, c.label)] = c
+    return list(uniq.values())
 
-        <indent>with __import__("torch").profiler.record_function("TB:..."):
-            <original block>
 
-    Fixes:
-      - Never wraps a 'def'/'class' header directly (wraps inside the body).
-      - Clamps range to stop before indentation dedents (prevents corrupting following defs).
-      - Keeps overlapping/nested ranges (no overlap-dropping).
+def _prune_containing_spans(callsites: list[CallSite]) -> list[CallSite]:
     """
-    if not boundaries:
+    Drop any callsite whose span strictly contains another callsite span
+    in the same (file, scope), regardless of ordering.
+    """
+    groups: dict[tuple[str, str], list[CallSite]] = defaultdict(list)
+    for c in callsites:
+        groups[(c.file, c.scope)].append(c)
+
+    kept_all: list[CallSite] = []
+
+    for (file, scope), items in groups.items():
+        # O(n^2) but n is small per file/scope
+        drop = set()
+        for i, a in enumerate(items):
+            for j, b in enumerate(items):
+                if i == j:
+                    continue
+                if (a.line_start <= b.line_start and a.line_end >= b.line_end) and (
+                    (a.line_start, a.line_end) != (b.line_start, b.line_end)
+                ):
+                    drop.add(i)
+                    break
+
+        for i, c in enumerate(items):
+            if i not in drop:
+                kept_all.append(c)
+
+    kept_all.sort(key=lambda c: (c.file, c.line_start, c.line_end, c.scope, c.call_norm, c.label))
+    return kept_all
+
+
+def _apply_callsites_to_lines(lines: list[str], callsites: list[CallSite]) -> list[str]:
+    if not callsites:
         return lines
 
-    # De-dup exact duplicates
-    uniq = {}
-    for b in boundaries:
-        ls = int(b.line_start)
-        le = int(b.line_end)
-        if le < ls:
-            ls, le = le, ls
-        if ls < 1:
-            continue
-        uniq[(ls, le, b.block_key)] = Boundary(
-            block_key=b.block_key,
-            file=b.file,
-            line_start=ls,
-            line_end=le,
-            torch_calls=b.torch_calls,
-        )
-
-    b_sorted = sorted(uniq.values(), key=lambda b: (b.line_start, b.line_end, b.block_key))
     out = list(lines)
 
-    # Apply bottom->top so earlier insertions don't shift later indices.
-    # Track insertion points and offset upcoming boundaries so nested parents
-    # still cover their intended end lines after child wrappers add lines.
     inserted_positions: list[int] = []
-    for b in reversed(b_sorted):
-        ls = b.line_start
-        le = b.line_end
+    for c in reversed(callsites):
+        ls = c.line_start
+        le = c.line_end
 
         if inserted_positions:
             ls += sum(1 for pos in inserted_positions if pos <= ls)
@@ -161,18 +167,9 @@ def _apply_boundaries_to_lines(lines: list[str], boundaries: list[Boundary]) -> 
         if ls > len(out) or le < ls:
             continue
 
-        # If boundary starts on a def/class header, move to the first body statement
         if _is_def_or_class_line(out[ls - 1]):
-            i = ls  # 0-based: ls is next line
-            while i < len(out) and _is_noncode_line(out[i]):
-                i += 1
-            if i >= len(out):
-                continue
-            ls = i + 1  # back to 1-based
-            if le < ls:
-                continue
+            continue
 
-        # Determine base indentation from the first non-blank/non-comment line in [ls..le]
         base_i = ls - 1
         while base_i <= le - 1 and _is_noncode_line(out[base_i]):
             base_i += 1
@@ -182,33 +179,27 @@ def _apply_boundaries_to_lines(lines: list[str], boundaries: list[Boundary]) -> 
         base_indent_len = _line_indent_len(out[base_i])
         base_indent = out[base_i][:base_indent_len]
 
-        # Clamp le so we do NOT cross a dedent boundary
-        # (i.e., do not include lines with indent < base_indent_len)
         clamp_le = le
         for j in range(base_i, le):
             ln = out[j]
             if _is_noncode_line(ln):
                 continue
             if _line_indent_len(ln) < base_indent_len:
-                clamp_le = j  # stop BEFORE this line
+                clamp_le = j
                 break
         le = clamp_le
         if le < ls:
             continue
 
-        label = _make_label(b)
+        label = (c.label or "").replace("\n", " ").replace("\r", " ")
         with_line = f'{base_indent}with __import__("torch").profiler.record_function("{label}"):'
 
-        # Re-indent wrapped lines by one extra level relative to base_indent.
         new_block: list[str] = []
         for j in range(ls - 1, le):
             ln = out[j]
             if ln.strip() == "":
                 new_block.append(base_indent + "    ")
                 continue
-
-            # If the line is less-indented than base_indent (shouldn't happen after clamp),
-            # keep it as-is but still indent to avoid syntax break.
             if not ln.startswith(base_indent):
                 new_block.append(base_indent + "    " + ln.lstrip(" \t"))
             else:
@@ -219,38 +210,24 @@ def _apply_boundaries_to_lines(lines: list[str], boundaries: list[Boundary]) -> 
 
     return out
 
+
 def _copy_tree(src: Path, dst: Path) -> None:
     if dst.exists():
         raise FileExistsError(f"Destination already exists: {dst}")
     shutil.copytree(src, dst)
 
 
-def _group_by_file(boundaries: list[Boundary]) -> dict[str, list[Boundary]]:
-    by_file: dict[str, list[Boundary]] = {}
-    for b in boundaries:
-        by_file.setdefault(b.file, []).append(b)
+def _group_by_file(callsites: list[CallSite]) -> dict[str, list[CallSite]]:
+    by_file: dict[str, list[CallSite]] = {}
+    for c in callsites:
+        by_file.setdefault(c.file, []).append(c)
     return by_file
 
 
-def _resolve_plan_file_to_dst(
-    plan_file: Path,
-    src_root: Path,
-    dst_root: Path,
-    package_root_name: str,
-) -> Path | None:
-    """
-    Map a plan file path to the instrumented copy.
-
-    Strategy:
-      1) If plan_file is under src_root, use that relative path.
-      2) Else, locate 'package_root_name' in the plan_file path and use suffix after it.
-         Example: /old/.../toy_transformer_pkg/data/x.py -> data/x.py
-      3) Else, fallback to dst_root / basename.
-    """
+def _resolve_plan_file_to_dst(plan_file: Path, src_root: Path, dst_root: Path, package_root_name: str) -> Path | None:
     plan_file = plan_file.resolve()
     src_root = src_root.resolve()
 
-    # 1) direct relative
     try:
         rel = plan_file.relative_to(src_root)
         cand = dst_root / rel
@@ -258,7 +235,6 @@ def _resolve_plan_file_to_dst(
     except Exception:
         pass
 
-    # 2) suffix after package root name
     parts = list(plan_file.parts)
     if package_root_name in parts:
         i = parts.index(package_root_name)
@@ -267,7 +243,6 @@ def _resolve_plan_file_to_dst(
         if cand.exists():
             return cand
 
-    # 3) basename fallback
     cand = dst_root / plan_file.name
     if cand.exists():
         return cand
@@ -281,28 +256,13 @@ def _write_profiler_runner(dst_root: Path, entry_script: str = "train.py") -> Pa
 import os
 import sys
 import runpy
-import types
 import torch
 from torch.profiler import profile, ProfilerActivity
 
 def main():
-    pkg_dir = os.path.dirname(os.path.abspath(__file__))  # .../instrumented_toy_transformer_pkg
-
-    # --- CRITICAL: create an alias package named "toy_transformer_pkg"
-    # so imports like `from toy_transformer_pkg.data import ...` work,
-    # even though the directory name is instrumented_toy_transformer_pkg.
-    pkg_name = "toy_transformer_pkg"
-    if pkg_name not in sys.modules:
-        m = types.ModuleType(pkg_name)
-        m.__path__ = [pkg_dir]  # treat this folder as the package root
-        m.__file__ = os.path.join(pkg_dir, "__init__.py")
-        sys.modules[pkg_name] = m
-
-    # Also ensure current dir is importable (helps some import mechanisms)
+    pkg_dir = os.path.dirname(os.path.abspath(__file__))
     if pkg_dir not in sys.path:
         sys.path.insert(0, pkg_dir)
-
-    # Keep cwd inside package so relative file access works
     os.chdir(pkg_dir)
 
     acts = [ProfilerActivity.CPU]
@@ -310,7 +270,7 @@ def main():
         acts.append(ProfilerActivity.CUDA)
 
     with profile(activities=acts, record_shapes=True, with_stack=True, acc_events=True) as prof:
-        runpy.run_path(os.path.join(pkg_dir, "train.py"), run_name="__main__")
+        runpy.run_path(os.path.join(pkg_dir, "{entry_script}"), run_name="__main__")
 
     prof.export_chrome_trace(os.path.join(pkg_dir, "trace.json"))
     print("Wrote trace.json in:", pkg_dir)
@@ -325,10 +285,17 @@ if __name__ == "__main__":
         pass
     return runner_path
 
-def instrument_tree(plan: Path, src_root: Path, dst_root: Path, verbose: bool = True) -> None:
-    boundaries = _load_plan(plan)
-    by_file = _group_by_file(boundaries)
 
+def instrument_tree(plan: Path, src_root: Path, dst_root: Path, verbose: bool = True) -> None:
+    callsites = _load_plan(plan)
+
+    # 1) exact dedup
+    callsites = _dedup_exact(callsites)
+
+    # 2) loop/header containment prune
+    callsites = _prune_containing_spans(callsites)
+
+    by_file = _group_by_file(callsites)
     package_root_name = src_root.resolve().name
 
     _copy_tree(src_root, dst_root)
@@ -336,14 +303,13 @@ def instrument_tree(plan: Path, src_root: Path, dst_root: Path, verbose: bool = 
     changed = 0
     skipped_missing = 0
 
-    for file_str, bs in sorted(by_file.items()):
+    for file_str, sites in sorted(by_file.items()):
         dst_file = _resolve_plan_file_to_dst(
             plan_file=Path(file_str),
             src_root=src_root,
             dst_root=dst_root,
             package_root_name=package_root_name,
         )
-
         if dst_file is None:
             skipped_missing += 1
             if verbose:
@@ -353,27 +319,24 @@ def instrument_tree(plan: Path, src_root: Path, dst_root: Path, verbose: bool = 
         if dst_file.suffix != ".py":
             continue
 
-        usable = [b for b in bs if isinstance(b.line_start, int) and isinstance(b.line_end, int)]
-        if not usable:
-            continue
-
         lines = _read_lines(dst_file)
         before = list(lines)
 
-        lines = _apply_boundaries_to_lines(lines, usable)
+        sites_sorted = sorted(sites, key=lambda c: (c.line_start, c.line_end, c.call_norm, c.label))
+        lines = _apply_callsites_to_lines(lines, sites_sorted)
 
         if lines != before:
             _write_lines(dst_file, lines)
             changed += 1
             if verbose:
-                print(f"[OK] Instrumented: {dst_file}  (+{len(usable)} ranges)")
+                print(f"[OK] Instrumented: {dst_file}  (+{len(sites_sorted)} call-sites)")
         else:
             if verbose:
                 print(f"[NOOP] No change: {dst_file}")
 
     runner = _write_profiler_runner(dst_root, entry_script="train.py")
 
-    print(f"\nDone.")
+    print("\nDone.")
     print(f"  Instrumented files: {changed}")
     print(f"  Missing plan files: {skipped_missing}")
     print(f"  Output tree: {dst_root}")
@@ -381,24 +344,14 @@ def instrument_tree(plan: Path, src_root: Path, dst_root: Path, verbose: bool = 
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(
-        description="Instrument Python source tree with TB markers (and add run_profile.py)."
-    )
-    ap.add_argument("--plan", required=True, type=str, help="Path to torch_boundaries.json exported by analyzer")
+    ap = argparse.ArgumentParser(description="Instrument Python source tree with call-site TB markers.")
+    ap.add_argument("--plan", required=True, type=str, help="Path to call-plan JSON exported by cfg_torch_paths.py")
     ap.add_argument("--src", required=True, type=str, help="Source project root directory to copy+instrument")
-    ap.add_argument(
-        "--dst",
-        type=str,
-        default="",
-        help="Optional destination directory. Default: ./instrumented_<src_name> (in current directory)",
-    )
+    ap.add_argument("--dst", type=str, default="", help="Destination directory. Default: ./instrumented_<src_name>")
     ap.add_argument("--quiet", action="store_true", help="Less logging")
-    ap.add_argument(
-        "--force",
-        action="store_true",
-        help="If destination exists, remove it before instrumenting",
-    )
+    ap.add_argument("--force", action="store_true", help="If destination exists, remove it before instrumenting")
     args = ap.parse_args()
+
     plan = Path(args.plan)
     src = Path(args.src)
 
@@ -410,12 +363,10 @@ def main() -> None:
     if args.dst:
         dst = Path(args.dst)
     else:
-        src_name = src.resolve().name
-        dst = Path.cwd() / f"instrumented_{src_name}"
+        dst = Path.cwd() / f"instrumented_{src.resolve().name}"
 
     if dst.exists():
         if args.force:
-            # Safety: only delete directories, never files
             if dst.is_dir():
                 print(f"[FORCE] Removing existing destination: {dst}")
                 shutil.rmtree(dst)
@@ -428,7 +379,7 @@ def main() -> None:
             )
 
     if not args.quiet:
-        print("\nInstrumenting project:")
+        print("\nInstrumenting project (call-site TBs, loop-pruned):")
         print(f"  Source:      {src.resolve()}")
         print(f"  Destination: {dst.resolve()}")
         print(f"  Plan:        {plan.resolve()}\n")

@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+
+# Generated traces / reports
+trace.json
+**/trace.json

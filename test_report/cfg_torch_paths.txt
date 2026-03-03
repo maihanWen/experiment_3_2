@@ -1,0 +1,294 @@
+ENTRY: train.main.Block14
+TORCH ROOTS: ['torch', 'torch.nn', 'torch.nn.functional', 'torch.optim', 'torch.utils']
+Exportable call-sites: 14
+
+
+=== BLOCKS BY METHOD (node ids) ===
+
+-- train --
+  NodeID: 1
+  Key: train.Block1 @ /home/maihanwe/experiment_3_2/test/train.py:2-10
+  Successors: [train.Block2]
+  TorchBoundaryCalls: (none)
+  Code:
+    | """
+    | Simple 2-layer MLP training script.
+    | Modified to FORCE visible CPU↔GPU memory transfers for profiling.
+    | Key changes:
+    | - Create inputs/targets on CPU each step, then .to(device) -> forces HtoD copies on CUDA.
+    | - Keep loss.item() -> forces a small DtoH (GPU -> CPU) copy/sync on CUDA.
+    | - (Optional) pin_memory() best-effort to make HtoD copies more “memcpy-like” in traces.
+    | """
+
+  NodeID: 2
+  Key: train.Block2 @ /home/maihanwe/experiment_3_2/test/train.py:12-89
+  Successors: [train.Block30]
+  TorchBoundaryCalls: torch.nn.Linear, torch.nn.ReLU, torch.cuda.is_available, torch.device, torch.optim.Adam, torch.nn.CrossEntropyLoss, torch.randn, torch.randint
+  Code:
+    | import torch
+    | import torch.nn as nn
+    | import torch.optim as optim
+    | class TwoLayerMLP(nn.Module):
+    |     def __init__(self, in_dim=512, hidden_dim=1024, out_dim=10):
+    |         super().__init__()
+    |         self.fc1 = nn.Linear(in_dim, hidden_dim)
+    |         self.relu = nn.ReLU()
+    |         self.fc2 = nn.Linear(hidden_dim, out_dim)
+    |     def forward(self, x):
+    |         x = self.fc1(x)
+    |         x = self.relu(x)
+    |         x = self.fc2(x)
+    |         return x
+    | def main():
+    |     use_cuda = torch.cuda.is_available()
+    |     device = torch.device('cuda' if use_cuda else 'cpu')
+    |     print('Using device:', device)
+    |     model = TwoLayerMLP().to(device)
+    |     optimizer = optim.Adam(model.parameters(), lr=0.001)
+    |     criterion = nn.CrossEntropyLoss()
+    |     batch_size = 64
+    |     input_dim = 512
+    |     num_classes = 10
+    |     model.train()
+    |     for step in range(20):
+    |         cpu_inputs = torch.randn(batch_size, input_dim)
+    |         cpu_targets = torch.randint(0, num_classes, (batch_size,))
+    |         if use_cuda:
+    |             non_blocking_in = False
+    |             non_blocking_tg = False
+    |             try:
+    |                 cpu_inputs = cpu_inputs.pin_memory()
+    |                 non_blocking_in = True
+    |             except Exception:
+    |                 pass
+    |             try:
+    |                 cpu_targets = cpu_targets.pin_memory()
+    |                 non_blocking_tg = True
+    |             except Exception:
+    |                 pass
+    |             inputs = cpu_inputs.to(device, non_blocking=non_blocking_in)
+    |             targets = cpu_targets.to(device, non_blocking=non_blocking_tg)
+    |         else:
+    |             inputs = cpu_inputs
+    |             targets = cpu_targets
+    |         optimizer.zero_grad()
+    |         outputs = model(inputs)
+    |         loss = criterion(outputs, targets)
+    |         loss.backward()
+    |         optimizer.step()
+    |         if step % 5 == 0:
+    |             loss_value = loss.item()
+    |             print(f'Step {step:02d} | Loss: {loss_value:.4f}')
+    |     print('Training complete.')
+    | if __name__ == '__main__':
+    |     main()
+
+  NodeID: 3
+  Key: train.Block30 @ /home/maihanwe/experiment_3_2/test/train.py:89-89
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | main()
+
+-- train.TwoLayerMLP.__init__ --
+  NodeID: 4
+  Key: train.TwoLayerMLP.__init__.Block6 @ /home/maihanwe/experiment_3_2/test/train.py:19-22
+  Successors: []
+  TorchBoundaryCalls: torch.nn.Linear, torch.nn.ReLU
+  Code:
+    | super().__init__()
+    | self.fc1 = nn.Linear(in_dim, hidden_dim)
+    | self.relu = nn.ReLU()
+    | self.fc2 = nn.Linear(hidden_dim, out_dim)
+
+-- train.TwoLayerMLP.forward --
+  NodeID: 5
+  Key: train.TwoLayerMLP.forward.Block9 @ /home/maihanwe/experiment_3_2/test/train.py:25-28
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | x = self.fc1(x)
+    | x = self.relu(x)
+    | x = self.fc2(x)
+    | return x
+
+-- train.main --
+  NodeID: 6
+  Key: train.main.Block14 @ /home/maihanwe/experiment_3_2/test/train.py:32-44
+  Successors: [train.main.Block15]
+  TorchBoundaryCalls: torch.cuda.is_available, torch.device, torch.optim.Adam, torch.nn.CrossEntropyLoss
+  Code:
+    | use_cuda = torch.cuda.is_available()
+    | device = torch.device('cuda' if use_cuda else 'cpu')
+    | print('Using device:', device)
+    | model = TwoLayerMLP().to(device)
+    | optimizer = optim.Adam(model.parameters(), lr=0.001)
+    | criterion = nn.CrossEntropyLoss()
+    | batch_size = 64
+    | input_dim = 512
+    | num_classes = 10
+    | model.train()
+
+  NodeID: 7
+  Key: train.main.Block15 [LOOP] @ /home/maihanwe/experiment_3_2/test/train.py:46-83
+  Successors: [train.main.Block16, train.main.Block17]
+  TorchBoundaryCalls: torch.randn, torch.randint
+  Code:
+    | for step in range(20):
+    |     cpu_inputs = torch.randn(batch_size, input_dim)
+    |     cpu_targets = torch.randint(0, num_classes, (batch_size,))
+    |     if use_cuda:
+    |         non_blocking_in = False
+    |         non_blocking_tg = False
+    |         try:
+    |             cpu_inputs = cpu_inputs.pin_memory()
+    |             non_blocking_in = True
+    |         except Exception:
+    |             pass
+    |         try:
+    |             cpu_targets = cpu_targets.pin_memory()
+    |             non_blocking_tg = True
+    |         except Exception:
+    |             pass
+    |         inputs = cpu_inputs.to(device, non_blocking=non_blocking_in)
+    |         targets = cpu_targets.to(device, non_blocking=non_blocking_tg)
+    |     else:
+    |         inputs = cpu_inputs
+    |         targets = cpu_targets
+    |     optimizer.zero_grad()
+    |     outputs = model(inputs)
+    |     loss = criterion(outputs, targets)
+    |     loss.backward()
+    |     optimizer.step()
+    |     if step % 5 == 0:
+    |         loss_value = loss.item()
+    |         print(f'Step {step:02d} | Loss: {loss_value:.4f}')
+
+  NodeID: 8
+  Key: train.main.Block16 @ /home/maihanwe/experiment_3_2/test/train.py:48-70
+  Successors: [train.main.Block18, train.main.Block20]
+  TorchBoundaryCalls: torch.randn, torch.randint
+  Code:
+    | cpu_inputs = torch.randn(batch_size, input_dim)
+    | cpu_targets = torch.randint(0, num_classes, (batch_size,))
+    | if use_cuda:
+    |     non_blocking_in = False
+    |     non_blocking_tg = False
+    |     try:
+    |         cpu_inputs = cpu_inputs.pin_memory()
+    |         non_blocking_in = True
+    |     except Exception:
+    |         pass
+    |     try:
+    |         cpu_targets = cpu_targets.pin_memory()
+    |         non_blocking_tg = True
+    |     except Exception:
+    |         pass
+    |     inputs = cpu_inputs.to(device, non_blocking=non_blocking_in)
+    |     targets = cpu_targets.to(device, non_blocking=non_blocking_tg)
+    | else:
+    |     inputs = cpu_inputs
+    |     targets = cpu_targets
+
+  NodeID: 9
+  Key: train.main.Block17 @ /home/maihanwe/experiment_3_2/test/train.py:85-85
+  Successors: []
+  TorchBoundaryCalls: (none)
+  Code:
+    | print('Training complete.')
+
+  NodeID: 10
+  Key: train.main.Block18 @ /home/maihanwe/experiment_3_2/test/train.py:53-59
+  Successors: [train.main.Block21, train.main.Block22]
+  TorchBoundaryCalls: (none)
+  Code:
+    | non_blocking_in = False
+    | non_blocking_tg = False
+    | try:
+    |     cpu_inputs = cpu_inputs.pin_memory()
+    |     non_blocking_in = True
+    | except Exception:
+    |     pass
+
+  NodeID: 11
+  Key: train.main.Block19 [BACKEDGE] @ /home/maihanwe/experiment_3_2/test/train.py:72-83
+  Successors: [train.main.Block27, train.main.Block15]
+  TorchBoundaryCalls: (none)
+  Code:
+    | optimizer.zero_grad()
+    | outputs = model(inputs)
+    | loss = criterion(outputs, targets)
+    | loss.backward()
+    | optimizer.step()
+    | if step % 5 == 0:
+    |     loss_value = loss.item()
+    |     print(f'Step {step:02d} | Loss: {loss_value:.4f}')
+
+  NodeID: 12
+  Key: train.main.Block20 @ /home/maihanwe/experiment_3_2/test/train.py:69-70
+  Successors: [train.main.Block19]
+  TorchBoundaryCalls: (none)
+  Code:
+    | inputs = cpu_inputs
+    | targets = cpu_targets
+
+  NodeID: 13
+  Key: train.main.Block21 @ /home/maihanwe/experiment_3_2/test/train.py:56-57
+  Successors: [train.main.Block23]
+  TorchBoundaryCalls: (none)
+  Code:
+    | cpu_inputs = cpu_inputs.pin_memory()
+    | non_blocking_in = True
+
+  NodeID: 14
+  Key: train.main.Block22 @ /home/maihanwe/experiment_3_2/test/train.py:59-59
+  Successors: [train.main.Block23]
+  TorchBoundaryCalls: (none)
+  Code:
+    | pass
+
+  NodeID: 15
+  Key: train.main.Block23 @ /home/maihanwe/experiment_3_2/test/train.py:60-64
+  Successors: [train.main.Block24, train.main.Block25]
+  TorchBoundaryCalls: (none)
+  Code:
+    | try:
+    |     cpu_targets = cpu_targets.pin_memory()
+    |     non_blocking_tg = True
+    | except Exception:
+    |     pass
+
+  NodeID: 16
+  Key: train.main.Block24 @ /home/maihanwe/experiment_3_2/test/train.py:61-62
+  Successors: [train.main.Block26]
+  TorchBoundaryCalls: (none)
+  Code:
+    | cpu_targets = cpu_targets.pin_memory()
+    | non_blocking_tg = True
+
+  NodeID: 17
+  Key: train.main.Block25 @ /home/maihanwe/experiment_3_2/test/train.py:64-64
+  Successors: [train.main.Block26]
+  TorchBoundaryCalls: (none)
+  Code:
+    | pass
+
+  NodeID: 18
+  Key: train.main.Block26 @ /home/maihanwe/experiment_3_2/test/train.py:66-67
+  Successors: [train.main.Block19]
+  TorchBoundaryCalls: (none)
+  Code:
+    | inputs = cpu_inputs.to(device, non_blocking=non_blocking_in)
+    | targets = cpu_targets.to(device, non_blocking=non_blocking_tg)
+
+  NodeID: 19
+  Key: train.main.Block27 [BACKEDGE] @ /home/maihanwe/experiment_3_2/test/train.py:82-83
+  Successors: [train.main.Block15]
+  TorchBoundaryCalls: (none)
+  Code:
+    | loss_value = loss.item()
+    | print(f'Step {step:02d} | Loss: {loss_value:.4f}')
+
+Exported call-based plan JSON: /home/maihanwe/experiment_3_2/test_report/torch_boundaries.json (14 call-sites)
+
+Saved to: /home/maihanwe/experiment_3_2/test_report/cfg_torch_paths.txt

@@ -1,0 +1,949 @@
+==============================
+TB Timeline (program start treated as 0)
+==============================
+Trace: /home/maihanwe/experiment_3_2/test_report/instrumented_test/trace.json
+t0: 5387478292877 us (all timestamps shown as ms since t0)
+TB spans: 148 (printed: 148; min-ms=0.0)
+CPU ops: 1827 (prefixes=['aten::'])
+Transfers: 71 (global)
+
+     0.671ms →      0.744ms  (   0.073 ms)  [CPU] TB:train.main.call.L32  (cat=user_annotation, pid=4160, tid=4160)
+
+     0.757ms →      0.776ms  (   0.019 ms)  [CPU] TB:train.main.call.L33  (cat=user_annotation, pid=4160, tid=4160)
+
+     0.818ms →      2.926ms  (   2.108 ms)  [CPU] TB:train.TwoLayerMLP.__init__.call.L20  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]      0.929ms →      0.955ms  (   0.026 ms)  aten::empty
+    [OP ]      0.993ms →      1.008ms  (   0.015 ms)  aten::detach
+    [OP ]      1.032ms →      1.033ms  (   0.001 ms)  aten::empty
+    [OP ]      1.117ms →      2.845ms  (   1.728 ms)  aten::uniform_
+    [OP ]      2.884ms →      2.890ms  (   0.006 ms)  aten::uniform_
+
+     2.938ms →      2.971ms  (   0.033 ms)  [CPU] TB:train.TwoLayerMLP.__init__.call.L21  (cat=user_annotation, pid=4160, tid=4160)
+
+     2.976ms →      3.077ms  (   0.101 ms)  [CPU] TB:train.TwoLayerMLP.__init__.call.L22  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]      2.995ms →      2.999ms  (   0.004 ms)  aten::empty
+    [OP ]      3.005ms →      3.007ms  (   0.002 ms)  aten::detach
+    [OP ]      3.037ms →      3.052ms  (   0.015 ms)  aten::uniform_
+
+   151.227ms →    151.516ms  (   0.289 ms)  [CPU] TB:train.main.call.L37  (cat=user_annotation, pid=4160, tid=4160)
+
+   151.526ms →    151.583ms  (   0.057 ms)  [CPU] TB:train.main.call.L38  (cat=user_annotation, pid=4160, tid=4160)
+
+   151.606ms →    151.783ms  (   0.177 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    151.657ms →    151.766ms  (   0.109 ms)  aten::randn
+    [OP ]    151.669ms →    151.676ms  (   0.007 ms)  aten::empty
+    [OP ]    151.684ms →    151.765ms  (   0.081 ms)  aten::normal_
+
+   151.789ms →    151.846ms  (   0.057 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    151.816ms →    151.832ms  (   0.016 ms)  aten::randint
+    [OP ]    151.819ms →    151.820ms  (   0.001 ms)  aten::empty
+    [OP ]    151.825ms →    151.831ms  (   0.006 ms)  aten::random_
+
+   154.159ms →    270.974ms  ( 116.815 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    154.214ms →    270.814ms  ( 116.600 ms)  aten::linear
+    [OP ]    154.223ms →    154.274ms  (   0.051 ms)  aten::t
+    [OP ]    154.249ms →    154.269ms  (   0.020 ms)  aten::transpose
+    [OP ]    154.263ms →    154.269ms  (   0.006 ms)  aten::as_strided
+    [OP ]    154.283ms →    270.803ms  ( 116.520 ms)  aten::addmm
+
+   253.319ms →    270.768ms  (  17.449 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   271.022ms →    298.788ms  (  27.766 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    271.147ms →    298.649ms  (  27.502 ms)  aten::relu
+    [OP ]    271.183ms →    298.551ms  (  27.368 ms)  aten::clamp_min
+
+   298.528ms →    298.529ms  (   0.001 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   298.858ms →    299.334ms  (   0.476 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    298.975ms →    299.294ms  (   0.319 ms)  aten::linear
+    [OP ]    298.978ms →    299.020ms  (   0.042 ms)  aten::t
+    [OP ]    298.991ms →    299.017ms  (   0.026 ms)  aten::transpose
+    [OP ]    299.002ms →    299.016ms  (   0.014 ms)  aten::as_strided
+    [OP ]    299.024ms →    299.293ms  (   0.269 ms)  aten::addmm
+
+   299.283ms →    299.290ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   429.369ms →    429.643ms  (   0.274 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    429.403ms →    429.556ms  (   0.153 ms)  aten::randn
+    [OP ]    429.408ms →    429.417ms  (   0.009 ms)  aten::empty
+    [OP ]    429.420ms →    429.554ms  (   0.134 ms)  aten::normal_
+
+   429.659ms →    429.716ms  (   0.057 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    429.673ms →    429.695ms  (   0.022 ms)  aten::randint
+    [OP ]    429.677ms →    429.678ms  (   0.001 ms)  aten::empty
+    [OP ]    429.681ms →    429.695ms  (   0.014 ms)  aten::random_
+
+   429.965ms →    430.148ms  (   0.183 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    429.989ms →    430.130ms  (   0.141 ms)  aten::linear
+    [OP ]    429.991ms →    430.012ms  (   0.021 ms)  aten::t
+    [OP ]    429.999ms →    430.006ms  (   0.007 ms)  aten::transpose
+    [OP ]    430.004ms →    430.006ms  (   0.002 ms)  aten::as_strided
+    [OP ]    430.016ms →    430.129ms  (   0.113 ms)  aten::addmm
+
+   430.132ms →    430.148ms  (   0.016 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   430.155ms →    430.230ms  (   0.075 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    430.174ms →    430.214ms  (   0.040 ms)  aten::relu
+    [OP ]    430.180ms →    430.209ms  (   0.029 ms)  aten::clamp_min
+
+   430.236ms →    430.329ms  (   0.093 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    430.249ms →    430.307ms  (   0.058 ms)  aten::linear
+    [OP ]    430.250ms →    430.256ms  (   0.006 ms)  aten::t
+    [OP ]    430.252ms →    430.254ms  (   0.002 ms)  aten::transpose
+    [OP ]    430.257ms →    430.307ms  (   0.050 ms)  aten::addmm
+
+   430.305ms →    430.314ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   432.026ms →    432.209ms  (   0.183 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    432.038ms →    432.181ms  (   0.143 ms)  aten::randn
+    [OP ]    432.039ms →    432.045ms  (   0.006 ms)  aten::empty
+    [OP ]    432.047ms →    432.180ms  (   0.133 ms)  aten::normal_
+
+   432.217ms →    432.246ms  (   0.029 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    432.226ms →    432.233ms  (   0.007 ms)  aten::randint
+    [OP ]    432.227ms →    432.228ms  (   0.001 ms)  aten::empty
+    [OP ]    432.229ms →    432.232ms  (   0.003 ms)  aten::random_
+
+   432.395ms →    432.495ms  (   0.100 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    432.414ms →    432.480ms  (   0.066 ms)  aten::linear
+    [OP ]    432.415ms →    432.424ms  (   0.009 ms)  aten::t
+    [OP ]    432.418ms →    432.421ms  (   0.003 ms)  aten::transpose
+    [OP ]    432.420ms →    432.421ms  (   0.001 ms)  aten::as_strided
+    [OP ]    432.425ms →    432.479ms  (   0.054 ms)  aten::addmm
+
+   432.484ms →    432.497ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   432.502ms →    432.548ms  (   0.046 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    432.512ms →    432.534ms  (   0.022 ms)  aten::relu
+    [OP ]    432.515ms →    432.531ms  (   0.016 ms)  aten::clamp_min
+
+   432.554ms →    432.614ms  (   0.060 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    432.563ms →    432.599ms  (   0.036 ms)  aten::linear
+    [OP ]    432.564ms →    432.568ms  (   0.004 ms)  aten::t
+    [OP ]    432.565ms →    432.567ms  (   0.002 ms)  aten::transpose
+    [OP ]    432.569ms →    432.599ms  (   0.030 ms)  aten::addmm
+
+   432.607ms →    432.614ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   433.537ms →    433.634ms  (   0.097 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    433.544ms →    433.611ms  (   0.067 ms)  aten::randn
+    [OP ]    433.545ms →    433.547ms  (   0.002 ms)  aten::empty
+    [OP ]    433.548ms →    433.610ms  (   0.062 ms)  aten::normal_
+
+   433.641ms →    433.668ms  (   0.027 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    433.648ms →    433.653ms  (   0.005 ms)  aten::randint
+    [OP ]    433.651ms →    433.653ms  (   0.002 ms)  aten::random_
+
+   433.797ms →    433.875ms  (   0.078 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    433.807ms →    433.860ms  (   0.053 ms)  aten::linear
+    [OP ]    433.808ms →    433.815ms  (   0.007 ms)  aten::t
+    [OP ]    433.810ms →    433.812ms  (   0.002 ms)  aten::transpose
+    [OP ]    433.812ms →    433.813ms  (   0.001 ms)  aten::as_strided
+    [OP ]    433.816ms →    433.859ms  (   0.043 ms)  aten::addmm
+
+   433.865ms →    433.878ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   433.881ms →    433.933ms  (   0.052 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    433.891ms →    433.915ms  (   0.024 ms)  aten::relu
+    [OP ]    433.893ms →    433.910ms  (   0.017 ms)  aten::clamp_min
+
+   433.938ms →    433.996ms  (   0.058 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    433.946ms →    433.950ms  (   0.004 ms)  aten::t
+    [OP ]    433.946ms →    433.986ms  (   0.040 ms)  aten::linear
+    [OP ]    433.947ms →    433.948ms  (   0.001 ms)  aten::transpose
+    [OP ]    433.951ms →    433.985ms  (   0.034 ms)  aten::addmm
+
+   434.003ms →    434.011ms  (   0.008 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   434.951ms →    435.121ms  (   0.170 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    434.958ms →    435.091ms  (   0.133 ms)  aten::randn
+    [OP ]    434.959ms →    434.964ms  (   0.005 ms)  aten::empty
+    [OP ]    434.965ms →    435.089ms  (   0.124 ms)  aten::normal_
+
+   435.135ms →    435.207ms  (   0.072 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    435.163ms →    435.182ms  (   0.019 ms)  aten::randint
+    [OP ]    435.175ms →    435.176ms  (   0.001 ms)  aten::empty
+    [OP ]    435.178ms →    435.181ms  (   0.003 ms)  aten::random_
+
+   435.351ms →    435.434ms  (   0.083 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    435.361ms →    435.369ms  (   0.008 ms)  aten::t
+    [OP ]    435.361ms →    435.418ms  (   0.057 ms)  aten::linear
+    [OP ]    435.364ms →    435.366ms  (   0.002 ms)  aten::transpose
+    [OP ]    435.366ms →    435.367ms  (   0.001 ms)  aten::as_strided
+    [OP ]    435.372ms →    435.417ms  (   0.045 ms)  aten::addmm
+
+   435.426ms →    435.438ms  (   0.012 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   435.440ms →    435.482ms  (   0.042 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    435.448ms →    435.467ms  (   0.019 ms)  aten::relu
+    [OP ]    435.451ms →    435.465ms  (   0.014 ms)  aten::clamp_min
+
+   435.491ms →    435.551ms  (   0.060 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    435.500ms →    435.506ms  (   0.006 ms)  aten::t
+    [OP ]    435.500ms →    435.537ms  (   0.037 ms)  aten::linear
+    [OP ]    435.502ms →    435.505ms  (   0.003 ms)  aten::transpose
+    [OP ]    435.503ms →    435.504ms  (   0.001 ms)  aten::as_strided
+    [OP ]    435.508ms →    435.537ms  (   0.029 ms)  aten::addmm
+
+   435.546ms →    435.553ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   436.581ms →    436.839ms  (   0.258 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    436.592ms →    436.782ms  (   0.190 ms)  aten::randn
+    [OP ]    436.594ms →    436.602ms  (   0.008 ms)  aten::empty
+    [OP ]    436.603ms →    436.779ms  (   0.176 ms)  aten::normal_
+
+   436.856ms →    436.908ms  (   0.052 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    436.870ms →    436.883ms  (   0.013 ms)  aten::randint
+    [OP ]    436.872ms →    436.874ms  (   0.002 ms)  aten::empty
+    [OP ]    436.876ms →    436.882ms  (   0.006 ms)  aten::random_
+
+   437.078ms →    437.161ms  (   0.083 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    437.088ms →    437.146ms  (   0.058 ms)  aten::linear
+    [OP ]    437.089ms →    437.096ms  (   0.007 ms)  aten::t
+    [OP ]    437.092ms →    437.094ms  (   0.002 ms)  aten::transpose
+    [OP ]    437.093ms →    437.094ms  (   0.001 ms)  aten::as_strided
+    [OP ]    437.097ms →    437.145ms  (   0.048 ms)  aten::addmm
+
+   437.155ms →    437.167ms  (   0.012 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   437.167ms →    437.227ms  (   0.060 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    437.175ms →    437.209ms  (   0.034 ms)  aten::relu
+    [OP ]    437.178ms →    437.206ms  (   0.028 ms)  aten::clamp_min
+
+   437.234ms →    437.338ms  (   0.104 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    437.251ms →    437.317ms  (   0.066 ms)  aten::linear
+    [OP ]    437.252ms →    437.258ms  (   0.006 ms)  aten::t
+    [OP ]    437.254ms →    437.257ms  (   0.003 ms)  aten::transpose
+    [OP ]    437.258ms →    437.316ms  (   0.058 ms)  aten::addmm
+
+   437.320ms →    437.329ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   438.721ms →    438.854ms  (   0.133 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    438.733ms →    438.824ms  (   0.091 ms)  aten::randn
+    [OP ]    438.735ms →    438.739ms  (   0.004 ms)  aten::empty
+    [OP ]    438.740ms →    438.822ms  (   0.082 ms)  aten::normal_
+
+   438.864ms →    438.896ms  (   0.032 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    438.874ms →    438.881ms  (   0.007 ms)  aten::randint
+    [OP ]    438.876ms →    438.877ms  (   0.001 ms)  aten::empty
+    [OP ]    438.878ms →    438.881ms  (   0.003 ms)  aten::random_
+
+   439.056ms →    439.142ms  (   0.086 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    439.069ms →    439.126ms  (   0.057 ms)  aten::linear
+    [OP ]    439.070ms →    439.078ms  (   0.008 ms)  aten::t
+    [OP ]    439.073ms →    439.076ms  (   0.003 ms)  aten::transpose
+    [OP ]    439.075ms →    439.076ms  (   0.001 ms)  aten::as_strided
+    [OP ]    439.079ms →    439.125ms  (   0.046 ms)  aten::addmm
+
+   439.135ms →    439.147ms  (   0.012 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   439.148ms →    439.199ms  (   0.051 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    439.157ms →    439.187ms  (   0.030 ms)  aten::relu
+    [OP ]    439.160ms →    439.185ms  (   0.025 ms)  aten::clamp_min
+
+   439.206ms →    439.272ms  (   0.066 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    439.213ms →    439.255ms  (   0.042 ms)  aten::linear
+    [OP ]    439.214ms →    439.221ms  (   0.007 ms)  aten::t
+    [OP ]    439.218ms →    439.220ms  (   0.002 ms)  aten::transpose
+    [OP ]    439.222ms →    439.255ms  (   0.033 ms)  aten::addmm
+
+   439.264ms →    439.273ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   440.156ms →    440.233ms  (   0.077 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    440.164ms →    440.214ms  (   0.050 ms)  aten::randn
+    [OP ]    440.166ms →    440.168ms  (   0.002 ms)  aten::empty
+    [OP ]    440.169ms →    440.214ms  (   0.045 ms)  aten::normal_
+
+   440.238ms →    440.261ms  (   0.023 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    440.242ms →    440.247ms  (   0.005 ms)  aten::randint
+    [OP ]    440.244ms →    440.246ms  (   0.002 ms)  aten::random_
+
+   440.402ms →    440.492ms  (   0.090 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    440.411ms →    440.476ms  (   0.065 ms)  aten::linear
+    [OP ]    440.414ms →    440.422ms  (   0.008 ms)  aten::t
+    [OP ]    440.417ms →    440.420ms  (   0.003 ms)  aten::transpose
+    [OP ]    440.419ms →    440.420ms  (   0.001 ms)  aten::as_strided
+    [OP ]    440.423ms →    440.475ms  (   0.052 ms)  aten::addmm
+
+   440.480ms →    440.495ms  (   0.015 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   440.498ms →    440.544ms  (   0.046 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    440.506ms →    440.528ms  (   0.022 ms)  aten::relu
+    [OP ]    440.511ms →    440.525ms  (   0.014 ms)  aten::clamp_min
+
+   440.550ms →    440.602ms  (   0.052 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    440.557ms →    440.589ms  (   0.032 ms)  aten::linear
+    [OP ]    440.558ms →    440.562ms  (   0.004 ms)  aten::t
+    [OP ]    440.559ms →    440.561ms  (   0.002 ms)  aten::transpose
+    [OP ]    440.563ms →    440.589ms  (   0.026 ms)  aten::addmm
+
+   440.606ms →    440.613ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   441.637ms →    441.797ms  (   0.160 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    441.647ms →    441.717ms  (   0.070 ms)  aten::randn
+    [OP ]    441.648ms →    441.655ms  (   0.007 ms)  aten::empty
+    [OP ]    441.658ms →    441.716ms  (   0.058 ms)  aten::normal_
+
+   441.819ms →    441.863ms  (   0.044 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    441.833ms →    441.844ms  (   0.011 ms)  aten::randint
+    [OP ]    441.836ms →    441.838ms  (   0.002 ms)  aten::empty
+    [OP ]    441.840ms →    441.844ms  (   0.004 ms)  aten::random_
+
+   442.108ms →    442.357ms  (   0.249 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    442.120ms →    442.129ms  (   0.009 ms)  aten::t
+    [OP ]    442.120ms →    442.336ms  (   0.216 ms)  aten::linear
+    [OP ]    442.124ms →    442.127ms  (   0.003 ms)  aten::transpose
+    [OP ]    442.126ms →    442.127ms  (   0.001 ms)  aten::as_strided
+    [OP ]    442.131ms →    442.334ms  (   0.203 ms)  aten::addmm
+
+   442.318ms →    442.342ms  (   0.024 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   442.366ms →    442.418ms  (   0.052 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    442.380ms →    442.405ms  (   0.025 ms)  aten::relu
+    [OP ]    442.383ms →    442.402ms  (   0.019 ms)  aten::clamp_min
+
+   442.424ms →    442.574ms  (   0.150 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    442.435ms →    442.548ms  (   0.113 ms)  aten::linear
+    [OP ]    442.436ms →    442.442ms  (   0.006 ms)  aten::t
+    [OP ]    442.438ms →    442.441ms  (   0.003 ms)  aten::transpose
+    [OP ]    442.440ms →    442.441ms  (   0.001 ms)  aten::as_strided
+    [OP ]    442.443ms →    442.547ms  (   0.104 ms)  aten::addmm
+
+   442.501ms →    442.556ms  (   0.055 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   443.999ms →    444.187ms  (   0.188 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    444.006ms →    444.156ms  (   0.150 ms)  aten::randn
+    [OP ]    444.007ms →    444.016ms  (   0.009 ms)  aten::empty
+    [OP ]    444.018ms →    444.155ms  (   0.137 ms)  aten::normal_
+
+   444.195ms →    444.239ms  (   0.044 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    444.202ms →    444.209ms  (   0.007 ms)  aten::randint
+    [OP ]    444.204ms →    444.205ms  (   0.001 ms)  aten::empty
+    [OP ]    444.206ms →    444.209ms  (   0.003 ms)  aten::random_
+
+   444.388ms →    444.476ms  (   0.088 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    444.400ms →    444.460ms  (   0.060 ms)  aten::linear
+    [OP ]    444.401ms →    444.409ms  (   0.008 ms)  aten::t
+    [OP ]    444.404ms →    444.407ms  (   0.003 ms)  aten::transpose
+    [OP ]    444.410ms →    444.459ms  (   0.049 ms)  aten::addmm
+
+   444.472ms →    444.487ms  (   0.015 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   444.482ms →    444.528ms  (   0.046 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    444.492ms →    444.514ms  (   0.022 ms)  aten::relu
+    [OP ]    444.495ms →    444.512ms  (   0.017 ms)  aten::clamp_min
+
+   444.534ms →    444.584ms  (   0.050 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    444.542ms →    444.573ms  (   0.031 ms)  aten::linear
+    [OP ]    444.543ms →    444.547ms  (   0.004 ms)  aten::t
+    [OP ]    444.544ms →    444.546ms  (   0.002 ms)  aten::transpose
+    [OP ]    444.547ms →    444.572ms  (   0.025 ms)  aten::addmm
+
+   444.588ms →    444.597ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   445.609ms →    445.788ms  (   0.179 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    445.618ms →    445.753ms  (   0.135 ms)  aten::randn
+    [OP ]    445.619ms →    445.626ms  (   0.007 ms)  aten::empty
+    [OP ]    445.628ms →    445.751ms  (   0.123 ms)  aten::normal_
+
+   445.800ms →    445.838ms  (   0.038 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    445.811ms →    445.820ms  (   0.009 ms)  aten::randint
+    [OP ]    445.813ms →    445.814ms  (   0.001 ms)  aten::empty
+    [OP ]    445.815ms →    445.819ms  (   0.004 ms)  aten::random_
+
+   445.974ms →    446.171ms  (   0.197 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    446.084ms →    446.150ms  (   0.066 ms)  aten::linear
+    [OP ]    446.085ms →    446.094ms  (   0.009 ms)  aten::t
+    [OP ]    446.088ms →    446.091ms  (   0.003 ms)  aten::transpose
+    [OP ]    446.090ms →    446.091ms  (   0.001 ms)  aten::as_strided
+    [OP ]    446.095ms →    446.150ms  (   0.055 ms)  aten::addmm
+
+   446.158ms →    446.171ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   446.179ms →    446.222ms  (   0.043 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    446.189ms →    446.208ms  (   0.019 ms)  aten::relu
+    [OP ]    446.192ms →    446.206ms  (   0.014 ms)  aten::clamp_min
+
+   446.227ms →    446.316ms  (   0.089 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    446.236ms →    446.240ms  (   0.004 ms)  aten::t
+    [OP ]    446.236ms →    446.289ms  (   0.053 ms)  aten::linear
+    [OP ]    446.237ms →    446.239ms  (   0.002 ms)  aten::transpose
+    [OP ]    446.241ms →    446.286ms  (   0.045 ms)  aten::addmm
+
+   446.278ms →    446.285ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   447.362ms →    447.453ms  (   0.091 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    447.371ms →    447.425ms  (   0.054 ms)  aten::randn
+    [OP ]    447.373ms →    447.375ms  (   0.002 ms)  aten::empty
+    [OP ]    447.376ms →    447.424ms  (   0.048 ms)  aten::normal_
+
+   447.461ms →    447.488ms  (   0.027 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    447.468ms →    447.476ms  (   0.008 ms)  aten::randint
+    [OP ]    447.470ms →    447.471ms  (   0.001 ms)  aten::empty
+    [OP ]    447.472ms →    447.476ms  (   0.004 ms)  aten::random_
+
+   447.657ms →    447.744ms  (   0.087 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    447.667ms →    447.728ms  (   0.061 ms)  aten::linear
+    [OP ]    447.668ms →    447.675ms  (   0.007 ms)  aten::t
+    [OP ]    447.670ms →    447.673ms  (   0.003 ms)  aten::transpose
+    [OP ]    447.672ms →    447.673ms  (   0.001 ms)  aten::as_strided
+    [OP ]    447.677ms →    447.728ms  (   0.051 ms)  aten::addmm
+
+   447.733ms →    447.746ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   447.751ms →    447.798ms  (   0.047 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    447.759ms →    447.782ms  (   0.023 ms)  aten::relu
+    [OP ]    447.762ms →    447.779ms  (   0.017 ms)  aten::clamp_min
+
+   447.803ms →    447.884ms  (   0.081 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    447.810ms →    447.859ms  (   0.049 ms)  aten::linear
+    [OP ]    447.811ms →    447.817ms  (   0.006 ms)  aten::t
+    [OP ]    447.812ms →    447.814ms  (   0.002 ms)  aten::transpose
+    [OP ]    447.818ms →    447.858ms  (   0.040 ms)  aten::addmm
+
+   447.857ms →    447.864ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   448.791ms →    448.864ms  (   0.073 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    448.798ms →    448.848ms  (   0.050 ms)  aten::randn
+    [OP ]    448.800ms →    448.801ms  (   0.001 ms)  aten::empty
+    [OP ]    448.803ms →    448.848ms  (   0.045 ms)  aten::normal_
+
+   448.869ms →    448.890ms  (   0.021 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    448.874ms →    448.879ms  (   0.005 ms)  aten::randint
+    [OP ]    448.876ms →    448.878ms  (   0.002 ms)  aten::random_
+
+   449.023ms →    449.115ms  (   0.092 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    449.033ms →    449.098ms  (   0.065 ms)  aten::linear
+    [OP ]    449.034ms →    449.041ms  (   0.007 ms)  aten::t
+    [OP ]    449.037ms →    449.040ms  (   0.003 ms)  aten::transpose
+    [OP ]    449.038ms →    449.039ms  (   0.001 ms)  aten::as_strided
+    [OP ]    449.043ms →    449.097ms  (   0.054 ms)  aten::addmm
+
+   449.093ms →    449.106ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   449.127ms →    449.177ms  (   0.050 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    449.138ms →    449.161ms  (   0.023 ms)  aten::relu
+    [OP ]    449.141ms →    449.158ms  (   0.017 ms)  aten::clamp_min
+
+   449.186ms →    449.262ms  (   0.076 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    449.196ms →    449.245ms  (   0.049 ms)  aten::linear
+    [OP ]    449.197ms →    449.202ms  (   0.005 ms)  aten::t
+    [OP ]    449.198ms →    449.200ms  (   0.002 ms)  aten::transpose
+    [OP ]    449.203ms →    449.245ms  (   0.042 ms)  aten::addmm
+
+   449.247ms →    449.256ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   450.299ms →    450.469ms  (   0.170 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    450.307ms →    450.437ms  (   0.130 ms)  aten::randn
+    [OP ]    450.308ms →    450.316ms  (   0.008 ms)  aten::empty
+    [OP ]    450.318ms →    450.436ms  (   0.118 ms)  aten::normal_
+
+   450.477ms →    450.509ms  (   0.032 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    450.486ms →    450.496ms  (   0.010 ms)  aten::randint
+    [OP ]    450.488ms →    450.489ms  (   0.001 ms)  aten::empty
+    [OP ]    450.493ms →    450.496ms  (   0.003 ms)  aten::random_
+
+   450.637ms →    450.727ms  (   0.090 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    450.652ms →    450.711ms  (   0.059 ms)  aten::linear
+    [OP ]    450.653ms →    450.660ms  (   0.007 ms)  aten::t
+    [OP ]    450.656ms →    450.658ms  (   0.002 ms)  aten::transpose
+    [OP ]    450.657ms →    450.658ms  (   0.001 ms)  aten::as_strided
+    [OP ]    450.661ms →    450.710ms  (   0.049 ms)  aten::addmm
+
+   450.714ms →    450.727ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   450.734ms →    450.777ms  (   0.043 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    450.745ms →    450.764ms  (   0.019 ms)  aten::relu
+    [OP ]    450.748ms →    450.762ms  (   0.014 ms)  aten::clamp_min
+
+   450.782ms →    450.850ms  (   0.068 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    450.789ms →    450.834ms  (   0.045 ms)  aten::linear
+    [OP ]    450.790ms →    450.794ms  (   0.004 ms)  aten::t
+    [OP ]    450.791ms →    450.793ms  (   0.002 ms)  aten::transpose
+    [OP ]    450.794ms →    450.833ms  (   0.039 ms)  aten::addmm
+
+   450.834ms →    450.843ms  (   0.009 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   451.907ms →    452.079ms  (   0.172 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    451.915ms →    452.046ms  (   0.131 ms)  aten::randn
+    [OP ]    451.917ms →    451.925ms  (   0.008 ms)  aten::empty
+    [OP ]    451.927ms →    452.045ms  (   0.118 ms)  aten::normal_
+
+   452.091ms →    452.124ms  (   0.033 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    452.098ms →    452.106ms  (   0.008 ms)  aten::randint
+    [OP ]    452.100ms →    452.101ms  (   0.001 ms)  aten::empty
+    [OP ]    452.103ms →    452.106ms  (   0.003 ms)  aten::random_
+
+   452.255ms →    452.345ms  (   0.090 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    452.265ms →    452.274ms  (   0.009 ms)  aten::t
+    [OP ]    452.265ms →    452.328ms  (   0.063 ms)  aten::linear
+    [OP ]    452.268ms →    452.271ms  (   0.003 ms)  aten::transpose
+    [OP ]    452.270ms →    452.271ms  (   0.001 ms)  aten::as_strided
+    [OP ]    452.277ms →    452.327ms  (   0.050 ms)  aten::addmm
+
+   452.335ms →    452.348ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   452.353ms →    452.400ms  (   0.047 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    452.364ms →    452.386ms  (   0.022 ms)  aten::relu
+    [OP ]    452.367ms →    452.383ms  (   0.016 ms)  aten::clamp_min
+
+   452.405ms →    452.508ms  (   0.103 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    452.413ms →    452.417ms  (   0.004 ms)  aten::t
+    [OP ]    452.413ms →    452.491ms  (   0.078 ms)  aten::linear
+    [OP ]    452.414ms →    452.416ms  (   0.002 ms)  aten::transpose
+    [OP ]    452.418ms →    452.489ms  (   0.071 ms)  aten::addmm
+
+   452.473ms →    452.494ms  (   0.021 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   453.799ms →    453.896ms  (   0.097 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    453.806ms →    453.858ms  (   0.052 ms)  aten::randn
+    [OP ]    453.808ms →    453.810ms  (   0.002 ms)  aten::empty
+    [OP ]    453.811ms →    453.857ms  (   0.046 ms)  aten::normal_
+
+   453.907ms →    453.951ms  (   0.044 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    453.918ms →    453.927ms  (   0.009 ms)  aten::randint
+    [OP ]    453.921ms →    453.922ms  (   0.001 ms)  aten::empty
+    [OP ]    453.924ms →    453.927ms  (   0.003 ms)  aten::random_
+
+   454.088ms →    454.171ms  (   0.083 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    454.098ms →    454.154ms  (   0.056 ms)  aten::linear
+    [OP ]    454.099ms →    454.106ms  (   0.007 ms)  aten::t
+    [OP ]    454.102ms →    454.104ms  (   0.002 ms)  aten::transpose
+    [OP ]    454.107ms →    454.153ms  (   0.046 ms)  aten::addmm
+
+   454.170ms →    454.183ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   454.178ms →    454.217ms  (   0.039 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    454.186ms →    454.206ms  (   0.020 ms)  aten::relu
+    [OP ]    454.189ms →    454.203ms  (   0.014 ms)  aten::clamp_min
+
+   454.221ms →    454.273ms  (   0.052 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    454.228ms →    454.258ms  (   0.030 ms)  aten::linear
+    [OP ]    454.229ms →    454.233ms  (   0.004 ms)  aten::t
+    [OP ]    454.230ms →    454.232ms  (   0.002 ms)  aten::transpose
+    [OP ]    454.234ms →    454.258ms  (   0.024 ms)  aten::addmm
+
+   454.278ms →    454.285ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   455.601ms →    455.683ms  (   0.082 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    455.609ms →    455.662ms  (   0.053 ms)  aten::randn
+    [OP ]    455.611ms →    455.612ms  (   0.001 ms)  aten::empty
+    [OP ]    455.613ms →    455.661ms  (   0.048 ms)  aten::normal_
+
+   455.689ms →    455.713ms  (   0.024 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    455.695ms →    455.700ms  (   0.005 ms)  aten::randint
+    [OP ]    455.698ms →    455.700ms  (   0.002 ms)  aten::random_
+
+   455.835ms →    455.916ms  (   0.081 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    455.845ms →    455.900ms  (   0.055 ms)  aten::linear
+    [OP ]    455.846ms →    455.855ms  (   0.009 ms)  aten::t
+    [OP ]    455.848ms →    455.850ms  (   0.002 ms)  aten::transpose
+    [OP ]    455.850ms →    455.851ms  (   0.001 ms)  aten::as_strided
+    [OP ]    455.856ms →    455.898ms  (   0.042 ms)  aten::addmm
+
+   455.910ms →    455.923ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   455.922ms →    455.961ms  (   0.039 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    455.931ms →    455.948ms  (   0.017 ms)  aten::relu
+    [OP ]    455.934ms →    455.946ms  (   0.012 ms)  aten::clamp_min
+
+   455.965ms →    456.012ms  (   0.047 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    455.972ms →    455.976ms  (   0.004 ms)  aten::t
+    [OP ]    455.972ms →    456.001ms  (   0.029 ms)  aten::linear
+    [OP ]    455.974ms →    455.976ms  (   0.002 ms)  aten::transpose
+    [OP ]    455.977ms →    456.000ms  (   0.023 ms)  aten::addmm
+
+   456.011ms →    456.018ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   457.637ms →    457.733ms  (   0.096 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    457.647ms →    457.711ms  (   0.064 ms)  aten::randn
+    [OP ]    457.648ms →    457.654ms  (   0.006 ms)  aten::empty
+    [OP ]    457.658ms →    457.710ms  (   0.052 ms)  aten::normal_
+
+   457.739ms →    457.770ms  (   0.031 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    457.744ms →    457.752ms  (   0.008 ms)  aten::randint
+    [OP ]    457.749ms →    457.752ms  (   0.003 ms)  aten::random_
+
+   457.920ms →    458.167ms  (   0.247 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    457.936ms →    458.126ms  (   0.190 ms)  aten::linear
+    [OP ]    457.998ms →    458.016ms  (   0.018 ms)  aten::t
+    [OP ]    458.007ms →    458.012ms  (   0.005 ms)  aten::transpose
+    [OP ]    458.009ms →    458.011ms  (   0.002 ms)  aten::as_strided
+    [OP ]    458.017ms →    458.125ms  (   0.108 ms)  aten::addmm
+
+   458.132ms →    458.147ms  (   0.015 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   458.178ms →    458.235ms  (   0.057 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    458.194ms →    458.219ms  (   0.025 ms)  aten::relu
+    [OP ]    458.198ms →    458.216ms  (   0.018 ms)  aten::clamp_min
+
+   458.241ms →    458.305ms  (   0.064 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    458.249ms →    458.290ms  (   0.041 ms)  aten::linear
+    [OP ]    458.250ms →    458.255ms  (   0.005 ms)  aten::t
+    [OP ]    458.251ms →    458.253ms  (   0.002 ms)  aten::transpose
+    [OP ]    458.256ms →    458.290ms  (   0.034 ms)  aten::addmm
+
+   458.307ms →    458.313ms  (   0.006 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   459.325ms →    459.565ms  (   0.240 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    459.333ms →    459.535ms  (   0.202 ms)  aten::randn
+    [OP ]    459.334ms →    459.342ms  (   0.008 ms)  aten::empty
+    [OP ]    459.344ms →    459.533ms  (   0.189 ms)  aten::normal_
+
+   459.575ms →    459.605ms  (   0.030 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    459.584ms →    459.592ms  (   0.008 ms)  aten::randint
+    [OP ]    459.586ms →    459.587ms  (   0.001 ms)  aten::empty
+    [OP ]    459.589ms →    459.592ms  (   0.003 ms)  aten::random_
+
+   459.739ms →    459.825ms  (   0.086 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    459.750ms →    459.757ms  (   0.007 ms)  aten::t
+    [OP ]    459.750ms →    459.808ms  (   0.058 ms)  aten::linear
+    [OP ]    459.753ms →    459.755ms  (   0.002 ms)  aten::transpose
+    [OP ]    459.755ms →    459.756ms  (   0.001 ms)  aten::as_strided
+    [OP ]    459.759ms →    459.807ms  (   0.048 ms)  aten::addmm
+
+   459.819ms →    459.832ms  (   0.013 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   459.831ms →    459.877ms  (   0.046 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    459.844ms →    459.864ms  (   0.020 ms)  aten::relu
+    [OP ]    459.848ms →    459.862ms  (   0.014 ms)  aten::clamp_min
+
+   459.881ms →    459.934ms  (   0.053 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    459.889ms →    459.919ms  (   0.030 ms)  aten::linear
+    [OP ]    459.890ms →    459.893ms  (   0.003 ms)  aten::t
+    [OP ]    459.891ms →    459.892ms  (   0.001 ms)  aten::transpose
+    [OP ]    459.894ms →    459.919ms  (   0.025 ms)  aten::addmm
+
+   459.931ms →    459.938ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   460.818ms →    461.007ms  (   0.189 ms)  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    460.826ms →    460.965ms  (   0.139 ms)  aten::randn
+    [OP ]    460.827ms →    460.832ms  (   0.005 ms)  aten::empty
+    [OP ]    460.834ms →    460.963ms  (   0.129 ms)  aten::normal_
+
+   461.020ms →    461.056ms  (   0.036 ms)  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    461.028ms →    461.035ms  (   0.007 ms)  aten::randint
+    [OP ]    461.030ms →    461.031ms  (   0.001 ms)  aten::empty
+    [OP ]    461.032ms →    461.035ms  (   0.003 ms)  aten::random_
+
+   461.181ms →    461.272ms  (   0.091 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    461.191ms →    461.254ms  (   0.063 ms)  aten::linear
+    [OP ]    461.192ms →    461.203ms  (   0.011 ms)  aten::t
+    [OP ]    461.195ms →    461.200ms  (   0.005 ms)  aten::transpose
+    [OP ]    461.197ms →    461.199ms  (   0.002 ms)  aten::as_strided
+    [OP ]    461.206ms →    461.254ms  (   0.048 ms)  aten::addmm
+
+   461.263ms →    461.277ms  (   0.014 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+   461.280ms →    461.326ms  (   0.046 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    461.291ms →    461.311ms  (   0.020 ms)  aten::relu
+    [OP ]    461.294ms →    461.308ms  (   0.014 ms)  aten::clamp_min
+
+   461.333ms →    461.397ms  (   0.064 ms)  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+    [OP ]    461.345ms →    461.382ms  (   0.037 ms)  aten::linear
+    [OP ]    461.346ms →    461.352ms  (   0.006 ms)  aten::t
+    [OP ]    461.347ms →    461.351ms  (   0.004 ms)  aten::transpose
+    [OP ]    461.350ms →    461.351ms  (   0.001 ms)  aten::as_strided
+    [OP ]    461.354ms →    461.383ms  (   0.029 ms)  aten::addmm
+
+   461.393ms →    461.400ms  (   0.007 ms)  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+==============================
+Memory transfers timeline (global)
+==============================
+   149.887ms →    150.115ms  (   0.228 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   150.050ms →    150.165ms  (   0.115 ms)  Memcpy HtoD (Pageable -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   150.859ms →    150.888ms  (   0.029 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   151.074ms →    151.085ms  (   0.011 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   151.122ms →    151.123ms  (   0.001 ms)  Memcpy HtoD (Pageable -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   151.140ms →    151.144ms  (   0.004 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   154.001ms →    154.018ms  (   0.017 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   154.030ms →    154.035ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   154.048ms →    154.053ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   429.227ms →    429.245ms  (   0.018 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.298ms →    429.299ms  (   0.001 ms)  Memcpy DtoH (Device -> Pinned)  (cat=gpu_memcpy, pid=-1, tid=7)
+   429.820ms →    429.834ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.859ms →    429.865ms  (   0.006 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.972ms →    429.977ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   432.306ms →    432.320ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   432.333ms →    432.338ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   432.345ms →    432.350ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   433.726ms →    433.736ms  (   0.010 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   433.745ms →    433.748ms  (   0.003 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   433.761ms →    433.765ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   435.259ms →    435.272ms  (   0.013 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   435.281ms →    435.285ms  (   0.004 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   435.310ms →    435.314ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   436.970ms →    436.988ms  (   0.018 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   437.002ms →    437.021ms  (   0.019 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   437.021ms →    437.026ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   438.661ms →    438.671ms  (   0.010 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.940ms →    438.954ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.988ms →    438.995ms  (   0.007 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.990ms →    438.995ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   440.318ms →    440.331ms  (   0.013 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   440.343ms →    440.349ms  (   0.006 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   440.360ms →    440.366ms  (   0.006 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   442.004ms →    442.023ms  (   0.019 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   442.034ms →    442.038ms  (   0.004 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   442.048ms →    442.052ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   444.308ms →    444.323ms  (   0.015 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   444.336ms →    444.340ms  (   0.004 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   444.350ms →    444.360ms  (   0.010 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   445.888ms →    445.906ms  (   0.018 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   445.921ms →    445.928ms  (   0.007 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   445.943ms →    445.947ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   447.286ms →    447.306ms  (   0.020 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.564ms →    447.579ms  (   0.015 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.589ms →    447.604ms  (   0.015 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.616ms →    447.621ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   448.936ms →    448.947ms  (   0.011 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   448.959ms →    448.973ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   448.990ms →    448.994ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   450.559ms →    450.572ms  (   0.013 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   450.583ms →    450.588ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   450.601ms →    450.606ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   452.178ms →    452.192ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   452.201ms →    452.207ms  (   0.006 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   452.233ms →    452.238ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   454.006ms →    454.018ms  (   0.012 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   454.027ms →    454.040ms  (   0.013 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   454.060ms →    454.065ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   455.526ms →    455.536ms  (   0.010 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.756ms →    455.765ms  (   0.009 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.778ms →    455.783ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.792ms →    455.796ms  (   0.004 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   457.832ms →    457.848ms  (   0.016 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   457.861ms →    457.866ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   457.891ms →    457.899ms  (   0.008 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   459.653ms →    459.671ms  (   0.018 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   459.684ms →    459.689ms  (   0.005 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   459.701ms →    459.706ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   461.103ms →    461.117ms  (   0.014 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   461.127ms →    461.131ms  (   0.004 ms)  cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   461.163ms →    461.168ms  (   0.005 ms)  Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+
+==============================
+Combined timeline (TB + transfers)
+==============================
+     0.671ms →      0.744ms  (   0.073 ms)  [TB  ]  [CPU] TB:train.main.call.L32  (cat=user_annotation, pid=4160, tid=4160)
+     0.757ms →      0.776ms  (   0.019 ms)  [TB  ]  [CPU] TB:train.main.call.L33  (cat=user_annotation, pid=4160, tid=4160)
+     0.818ms →      2.926ms  (   2.108 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.__init__.call.L20  (cat=user_annotation, pid=4160, tid=4160)
+     2.938ms →      2.971ms  (   0.033 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.__init__.call.L21  (cat=user_annotation, pid=4160, tid=4160)
+     2.976ms →      3.077ms  (   0.101 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.__init__.call.L22  (cat=user_annotation, pid=4160, tid=4160)
+   149.887ms →    150.115ms  (   0.228 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   150.050ms →    150.165ms  (   0.115 ms)  [XFER] Memcpy HtoD (Pageable -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   150.859ms →    150.888ms  (   0.029 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   151.074ms →    151.085ms  (   0.011 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   151.122ms →    151.123ms  (   0.001 ms)  [XFER] Memcpy HtoD (Pageable -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   151.140ms →    151.144ms  (   0.004 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   151.227ms →    151.516ms  (   0.289 ms)  [TB  ]  [CPU] TB:train.main.call.L37  (cat=user_annotation, pid=4160, tid=4160)
+   151.526ms →    151.583ms  (   0.057 ms)  [TB  ]  [CPU] TB:train.main.call.L38  (cat=user_annotation, pid=4160, tid=4160)
+   151.606ms →    151.783ms  (   0.177 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   151.789ms →    151.846ms  (   0.057 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   154.001ms →    154.018ms  (   0.017 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   154.030ms →    154.035ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   154.048ms →    154.053ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   154.159ms →    270.974ms  ( 116.815 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   253.319ms →    270.768ms  (  17.449 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   271.022ms →    298.788ms  (  27.766 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   298.528ms →    298.529ms  (   0.001 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=gpu_user_annotation, pid=-1, tid=7)
+   298.858ms →    299.334ms  (   0.476 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   299.283ms →    299.290ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   429.227ms →    429.245ms  (   0.018 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.298ms →    429.299ms  (   0.001 ms)  [XFER] Memcpy DtoH (Device -> Pinned)  (cat=gpu_memcpy, pid=-1, tid=7)
+   429.369ms →    429.643ms  (   0.274 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   429.659ms →    429.716ms  (   0.057 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   429.820ms →    429.834ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.859ms →    429.865ms  (   0.006 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   429.965ms →    430.148ms  (   0.183 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   429.972ms →    429.977ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   430.132ms →    430.148ms  (   0.016 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   430.155ms →    430.230ms  (   0.075 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   430.236ms →    430.329ms  (   0.093 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   430.305ms →    430.314ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   432.026ms →    432.209ms  (   0.183 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   432.217ms →    432.246ms  (   0.029 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   432.306ms →    432.320ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   432.333ms →    432.338ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   432.345ms →    432.350ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   432.395ms →    432.495ms  (   0.100 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   432.484ms →    432.497ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   432.502ms →    432.548ms  (   0.046 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   432.554ms →    432.614ms  (   0.060 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   432.607ms →    432.614ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   433.537ms →    433.634ms  (   0.097 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   433.641ms →    433.668ms  (   0.027 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   433.726ms →    433.736ms  (   0.010 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   433.745ms →    433.748ms  (   0.003 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   433.761ms →    433.765ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   433.797ms →    433.875ms  (   0.078 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   433.865ms →    433.878ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   433.881ms →    433.933ms  (   0.052 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   433.938ms →    433.996ms  (   0.058 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   434.003ms →    434.011ms  (   0.008 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   434.951ms →    435.121ms  (   0.170 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   435.135ms →    435.207ms  (   0.072 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   435.259ms →    435.272ms  (   0.013 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   435.281ms →    435.285ms  (   0.004 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   435.310ms →    435.314ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   435.351ms →    435.434ms  (   0.083 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   435.426ms →    435.438ms  (   0.012 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   435.440ms →    435.482ms  (   0.042 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   435.491ms →    435.551ms  (   0.060 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   435.546ms →    435.553ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   436.581ms →    436.839ms  (   0.258 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   436.856ms →    436.908ms  (   0.052 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   436.970ms →    436.988ms  (   0.018 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   437.002ms →    437.021ms  (   0.019 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   437.021ms →    437.026ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   437.078ms →    437.161ms  (   0.083 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   437.155ms →    437.167ms  (   0.012 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   437.167ms →    437.227ms  (   0.060 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   437.234ms →    437.338ms  (   0.104 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   437.320ms →    437.329ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   438.661ms →    438.671ms  (   0.010 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.721ms →    438.854ms  (   0.133 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   438.864ms →    438.896ms  (   0.032 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   438.940ms →    438.954ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.988ms →    438.995ms  (   0.007 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   438.990ms →    438.995ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   439.056ms →    439.142ms  (   0.086 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   439.135ms →    439.147ms  (   0.012 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   439.148ms →    439.199ms  (   0.051 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   439.206ms →    439.272ms  (   0.066 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   439.264ms →    439.273ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   440.156ms →    440.233ms  (   0.077 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   440.238ms →    440.261ms  (   0.023 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   440.318ms →    440.331ms  (   0.013 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   440.343ms →    440.349ms  (   0.006 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   440.360ms →    440.366ms  (   0.006 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   440.402ms →    440.492ms  (   0.090 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   440.480ms →    440.495ms  (   0.015 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   440.498ms →    440.544ms  (   0.046 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   440.550ms →    440.602ms  (   0.052 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   440.606ms →    440.613ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   441.637ms →    441.797ms  (   0.160 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   441.819ms →    441.863ms  (   0.044 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   442.004ms →    442.023ms  (   0.019 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   442.034ms →    442.038ms  (   0.004 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   442.048ms →    442.052ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   442.108ms →    442.357ms  (   0.249 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   442.318ms →    442.342ms  (   0.024 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   442.366ms →    442.418ms  (   0.052 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   442.424ms →    442.574ms  (   0.150 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   442.501ms →    442.556ms  (   0.055 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   443.999ms →    444.187ms  (   0.188 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   444.195ms →    444.239ms  (   0.044 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   444.308ms →    444.323ms  (   0.015 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   444.336ms →    444.340ms  (   0.004 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   444.350ms →    444.360ms  (   0.010 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   444.388ms →    444.476ms  (   0.088 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   444.472ms →    444.487ms  (   0.015 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   444.482ms →    444.528ms  (   0.046 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   444.534ms →    444.584ms  (   0.050 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   444.588ms →    444.597ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   445.609ms →    445.788ms  (   0.179 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   445.800ms →    445.838ms  (   0.038 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   445.888ms →    445.906ms  (   0.018 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   445.921ms →    445.928ms  (   0.007 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   445.943ms →    445.947ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   445.974ms →    446.171ms  (   0.197 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   446.158ms →    446.171ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   446.179ms →    446.222ms  (   0.043 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   446.227ms →    446.316ms  (   0.089 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   446.278ms →    446.285ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   447.286ms →    447.306ms  (   0.020 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.362ms →    447.453ms  (   0.091 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   447.461ms →    447.488ms  (   0.027 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   447.564ms →    447.579ms  (   0.015 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.589ms →    447.604ms  (   0.015 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   447.616ms →    447.621ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   447.657ms →    447.744ms  (   0.087 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   447.733ms →    447.746ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   447.751ms →    447.798ms  (   0.047 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   447.803ms →    447.884ms  (   0.081 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   447.857ms →    447.864ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   448.791ms →    448.864ms  (   0.073 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   448.869ms →    448.890ms  (   0.021 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   448.936ms →    448.947ms  (   0.011 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   448.959ms →    448.973ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   448.990ms →    448.994ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   449.023ms →    449.115ms  (   0.092 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   449.093ms →    449.106ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   449.127ms →    449.177ms  (   0.050 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   449.186ms →    449.262ms  (   0.076 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   449.247ms →    449.256ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   450.299ms →    450.469ms  (   0.170 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   450.477ms →    450.509ms  (   0.032 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   450.559ms →    450.572ms  (   0.013 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   450.583ms →    450.588ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   450.601ms →    450.606ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   450.637ms →    450.727ms  (   0.090 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   450.714ms →    450.727ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   450.734ms →    450.777ms  (   0.043 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   450.782ms →    450.850ms  (   0.068 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   450.834ms →    450.843ms  (   0.009 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   451.907ms →    452.079ms  (   0.172 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   452.091ms →    452.124ms  (   0.033 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   452.178ms →    452.192ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   452.201ms →    452.207ms  (   0.006 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   452.233ms →    452.238ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   452.255ms →    452.345ms  (   0.090 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   452.335ms →    452.348ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   452.353ms →    452.400ms  (   0.047 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   452.405ms →    452.508ms  (   0.103 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   452.473ms →    452.494ms  (   0.021 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   453.799ms →    453.896ms  (   0.097 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   453.907ms →    453.951ms  (   0.044 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   454.006ms →    454.018ms  (   0.012 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   454.027ms →    454.040ms  (   0.013 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   454.060ms →    454.065ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   454.088ms →    454.171ms  (   0.083 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   454.170ms →    454.183ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   454.178ms →    454.217ms  (   0.039 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   454.221ms →    454.273ms  (   0.052 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   454.278ms →    454.285ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   455.526ms →    455.536ms  (   0.010 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.601ms →    455.683ms  (   0.082 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   455.689ms →    455.713ms  (   0.024 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   455.756ms →    455.765ms  (   0.009 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.778ms →    455.783ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   455.792ms →    455.796ms  (   0.004 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   455.835ms →    455.916ms  (   0.081 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   455.910ms →    455.923ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   455.922ms →    455.961ms  (   0.039 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   455.965ms →    456.012ms  (   0.047 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   456.011ms →    456.018ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   457.637ms →    457.733ms  (   0.096 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   457.739ms →    457.770ms  (   0.031 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   457.832ms →    457.848ms  (   0.016 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   457.861ms →    457.866ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   457.891ms →    457.899ms  (   0.008 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   457.920ms →    458.167ms  (   0.247 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   458.132ms →    458.147ms  (   0.015 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   458.178ms →    458.235ms  (   0.057 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   458.241ms →    458.305ms  (   0.064 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   458.307ms →    458.313ms  (   0.006 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   459.325ms →    459.565ms  (   0.240 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   459.575ms →    459.605ms  (   0.030 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   459.653ms →    459.671ms  (   0.018 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   459.684ms →    459.689ms  (   0.005 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   459.701ms →    459.706ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   459.739ms →    459.825ms  (   0.086 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   459.819ms →    459.832ms  (   0.013 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   459.831ms →    459.877ms  (   0.046 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   459.881ms →    459.934ms  (   0.053 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   459.931ms →    459.938ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+   460.818ms →    461.007ms  (   0.189 ms)  [TB  ]  [CPU] TB:train.main.call.L48  (cat=user_annotation, pid=4160, tid=4160)
+   461.020ms →    461.056ms  (   0.036 ms)  [TB  ]  [CPU] TB:train.main.call.L49  (cat=user_annotation, pid=4160, tid=4160)
+   461.103ms →    461.117ms  (   0.014 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   461.127ms →    461.131ms  (   0.004 ms)  [XFER] cudaMemcpyAsync  (cat=cuda_runtime, pid=4160, tid=4160)
+   461.163ms →    461.168ms  (   0.005 ms)  [XFER] Memcpy HtoD (Pinned -> Device)  (cat=gpu_memcpy, pid=-1, tid=7)
+   461.181ms →    461.272ms  (   0.091 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=user_annotation, pid=4160, tid=4160)
+   461.263ms →    461.277ms  (   0.014 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L25  (cat=gpu_user_annotation, pid=-1, tid=7)
+   461.280ms →    461.326ms  (   0.046 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L26  (cat=user_annotation, pid=4160, tid=4160)
+   461.333ms →    461.397ms  (   0.064 ms)  [TB  ]  [CPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=user_annotation, pid=4160, tid=4160)
+   461.393ms →    461.400ms  (   0.007 ms)  [TB  ]  [GPU] TB:train.TwoLayerMLP.forward.call.L27  (cat=gpu_user_annotation, pid=-1, tid=7)
+
+Wrote timeline.json

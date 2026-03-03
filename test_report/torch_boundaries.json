@@ -1,0 +1,142 @@
+[
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.__init__",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 20,
+    "line_end": 20,
+    "call": "nn.Linear",
+    "call_norm": "torch.nn.Linear",
+    "label": "TB:train.TwoLayerMLP.__init__.call.L20 torch=torch.nn.Linear"
+  },
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.__init__",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 21,
+    "line_end": 21,
+    "call": "nn.ReLU",
+    "call_norm": "torch.nn.ReLU",
+    "label": "TB:train.TwoLayerMLP.__init__.call.L21 torch=torch.nn.ReLU"
+  },
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.__init__",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 22,
+    "line_end": 22,
+    "call": "nn.Linear",
+    "call_norm": "torch.nn.Linear",
+    "label": "TB:train.TwoLayerMLP.__init__.call.L22 torch=torch.nn.Linear"
+  },
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.forward",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 25,
+    "line_end": 25,
+    "call": "self.fc1",
+    "call_norm": "self.fc1",
+    "label": "TB:train.TwoLayerMLP.forward.call.L25 torch=self.fc1"
+  },
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.forward",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 26,
+    "line_end": 26,
+    "call": "self.relu",
+    "call_norm": "self.relu",
+    "label": "TB:train.TwoLayerMLP.forward.call.L26 torch=self.relu"
+  },
+  {
+    "kind": "call",
+    "scope": "train.TwoLayerMLP.forward",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 27,
+    "line_end": 27,
+    "call": "self.fc2",
+    "call_norm": "self.fc2",
+    "label": "TB:train.TwoLayerMLP.forward.call.L27 torch=self.fc2"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 32,
+    "line_end": 32,
+    "call": "torch.cuda.is_available",
+    "call_norm": "torch.cuda.is_available",
+    "label": "TB:train.main.call.L32 torch=torch.cuda.is_available"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 33,
+    "line_end": 33,
+    "call": "torch.device",
+    "call_norm": "torch.device",
+    "label": "TB:train.main.call.L33 torch=torch.device"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 37,
+    "line_end": 37,
+    "call": "optim.Adam",
+    "call_norm": "torch.optim.Adam",
+    "label": "TB:train.main.call.L37 torch=torch.optim.Adam"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 38,
+    "line_end": 38,
+    "call": "nn.CrossEntropyLoss",
+    "call_norm": "torch.nn.CrossEntropyLoss",
+    "label": "TB:train.main.call.L38 torch=torch.nn.CrossEntropyLoss"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 46,
+    "line_end": 83,
+    "call": "torch.randint",
+    "call_norm": "torch.randint",
+    "label": "TB:train.main.call.L46 torch=torch.randint"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 46,
+    "line_end": 83,
+    "call": "torch.randn",
+    "call_norm": "torch.randn",
+    "label": "TB:train.main.call.L46 torch=torch.randn"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 48,
+    "line_end": 48,
+    "call": "torch.randn",
+    "call_norm": "torch.randn",
+    "label": "TB:train.main.call.L48 torch=torch.randn"
+  },
+  {
+    "kind": "call",
+    "scope": "train.main",
+    "file": "/home/maihanwe/experiment_3_2/test/train.py",
+    "line_start": 49,
+    "line_end": 49,
+    "call": "torch.randint",
+    "call_norm": "torch.randint",
+    "label": "TB:train.main.call.L49 torch=torch.randint"
+  }
+]
